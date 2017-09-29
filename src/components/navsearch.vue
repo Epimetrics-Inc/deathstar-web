@@ -278,7 +278,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
 .sidebar-nav .search-wrapper{
   margin: 0px;
   height: inherit;

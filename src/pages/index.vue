@@ -159,7 +159,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
 /*Start of Document Preview*/
 
 #doh-logo{

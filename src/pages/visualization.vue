@@ -64,7 +64,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
 /*Start of Visualisation Sidebar*/
 .sidebar .sidebar-vis-options {
   margin-bottom: 0;
