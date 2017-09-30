@@ -52,7 +52,7 @@
                     <br>
 
                     <div class="doc-subject">
-                        {{ doc.subject}}
+                        {{ doc.raw_body.subject}}
                     </div>
 
                     <div class="doc-body" v-html="doc.body">
