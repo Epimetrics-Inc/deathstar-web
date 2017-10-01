@@ -7,8 +7,6 @@
 
 
 <script>
-import '@/assets/bootstrap.min.css'
-import '@/assets/main.css'
 
 export default {
   name: 'app'
