@@ -32,4 +32,16 @@ describe('navheader.vue', () => {
     expect(wrapper.find('#navheader-viz')[0].hasClass('active')).to.equal(false)
     expect(wrapper.find('#navheader-about')[0].hasClass('active')).to.equal(true)
   })
+
+  it('Press toggle', () => {
+    const toggleSideBar = sinon.spy(Navheader.methods, 'toogleSideBar')
+    const wrapper = mount(Navheader, {
+      propsData: { activeSidebar: 'viz' },
+      router: router
+    })
+
+    wrapper.find('.navbar-toggle')[0].trigger('click')
+
+    expect(toggleSideBar).to.be.calledOnce
+  })
 })

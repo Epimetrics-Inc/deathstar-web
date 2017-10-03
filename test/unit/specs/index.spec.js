@@ -59,7 +59,7 @@ describe('index.vue', () => {
     expect(wrapper.contains(Navsearch)).to.equal(true)
   })
 
-  it('Doc preview show/unshow', done => {
+  it('Doc preview show/unshow', () => {
     const wrapper = mount(Index, {
       router: router
     })
@@ -68,61 +68,61 @@ describe('index.vue', () => {
 
     wrapper.vm.doc = sampleDocument
 
-    wrapper.vm.$nextTick().then(() => {
-      expect(wrapper.contains('#zoom-wrapper')).to.equal(true) // show wrapper
-      wrapper.vm.doc = false
-    }).then(() => {
-      expect(wrapper.contains('#zoom-wrapper')).to.equal(false) // wrappper gone
-    }).then(done, done)
+    wrapper.update()
+    expect(wrapper.contains('#zoom-wrapper')).to.equal(true) // show wrapper
+    wrapper.vm.doc = false
+
+    wrapper.update()
+
+    expect(wrapper.contains('#zoom-wrapper')).to.equal(false) // wrappper gone
   })
 
-  it('Doc rendering', done => {
+  it('Doc rendering', () => {
     const wrapper = mount(Index, {
       router: router
     })
 
     wrapper.vm.doc = sampleDocument
 
-    wrapper.vm.$nextTick().then(() => {
-      expect(wrapper.find('.doc-date')[0].text().trim()).to.equal(sampleDocument.date)
-      expect(wrapper.find('.doc-type')[0].text().trim()).to.equal(sampleDocument.doctype)
-      expect(wrapper.find('.doc-num')[0].text().trim()).to.equal(sampleDocument.docnum)
-      expect(wrapper.find('.doc-subject')[0].text().trim()).to.equal(sampleDocument.raw_body.subject.text)
-      expect(wrapper.find('.doc-body')[0].text().trim()).to.equal(sampleDocument.body.trim())
-      expect(wrapper.find('.doc-sign')[0].text().trim()).to.equal(sampleDocument.sign)
-      expect(wrapper.find('.doc-sign-title')[0].text().trim()).to.equal(sampleDocument.signtitle)
-    }).then(done, done)
+    wrapper.update()
+
+    expect(wrapper.find('.doc-date')[0].text().trim()).to.equal(sampleDocument.date)
+    expect(wrapper.find('.doc-type')[0].text().trim()).to.equal(sampleDocument.doctype)
+    expect(wrapper.find('.doc-num')[0].text().trim()).to.equal(sampleDocument.docnum)
+    expect(wrapper.find('.doc-subject')[0].text().trim()).to.equal(sampleDocument.raw_body.subject.text)
+    expect(wrapper.find('.doc-body')[0].text().trim()).to.equal(sampleDocument.body.trim())
+    expect(wrapper.find('.doc-sign')[0].text().trim()).to.equal(sampleDocument.sign)
+    expect(wrapper.find('.doc-sign-title')[0].text().trim()).to.equal(sampleDocument.signtitle)
   })
 
-  it('Zoom in', done => {
+  it('Zoom in', () => {
     const wrapper = mount(Index, {
       router: router
     })
     wrapper.vm.doc = sampleDocument
 
-    wrapper.vm.$nextTick(() => {
-      expect(wrapper.find('#zoom-wrapper')[0].hasStyle('fontSize', '15px')).to.equal(true)
-      wrapper.find('#zoom-in-button')[0].trigger('click')
+    wrapper.update()
 
-      wrapper.vm.$nextTick().then(() => {
-        expect(wrapper.find('#zoom-wrapper')[0].hasStyle('fontSize', '20px')).to.equal(true)
-      }).then(done, done)
-    })
+    expect(wrapper.find('#zoom-wrapper')[0].hasStyle('fontSize', '15px')).to.equal(true)
+    wrapper.find('#zoom-in-button')[0].trigger('click')
+
+    wrapper.update()
+
+    expect(wrapper.find('#zoom-wrapper')[0].hasStyle('fontSize', '20px')).to.equal(true)
   })
 
-  it('Zoom out', done => {
+  it('Zoom out', () => {
     const wrapper = mount(Index, {
       router: router
     })
     wrapper.vm.doc = sampleDocument
 
-    wrapper.vm.$nextTick(() => {
-      expect(wrapper.find('#zoom-wrapper')[0].hasStyle('fontSize', '15px')).to.equal(true)
-      wrapper.find('#zoom-out-button')[0].trigger('click')
+    wrapper.update()
+    expect(wrapper.find('#zoom-wrapper')[0].hasStyle('fontSize', '15px')).to.equal(true)
+    wrapper.find('#zoom-out-button')[0].trigger('click')
 
-      wrapper.vm.$nextTick().then(() => {
-        expect(wrapper.find('#zoom-wrapper')[0].hasStyle('fontSize', '10px')).to.equal(true)
-      }).then(done, done)
-    })
+    wrapper.update()
+
+    expect(wrapper.find('#zoom-wrapper')[0].hasStyle('fontSize', '10px')).to.equal(true)
   })
 })

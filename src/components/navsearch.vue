@@ -18,10 +18,10 @@
         
         <transition name="fade">
             <div id = "export-options" v-show="checkedAOs.length > 0">
-                <button v-on:click="selectAll()" class="btn btn-default selector-button" type="button">
+                <button v-on:click="selectAll()" class="btn btn-default selector-button" id="selectAll" type="button">
                     Select all
                 </button>
-                <button v-on:click="deselectAll()" class="btn btn-default selector-button" href="#" type="button">
+                <button v-on:click="deselectAll()" class="btn btn-default selector-button" id="deselectall" href="#" type="button">
                     Deselect all
                 </button>
                     <button v-on:click="downloadDocs()" v-if="isDocActive == 'true'" class="btn btn-default search-option export-button icon-button" type="button">

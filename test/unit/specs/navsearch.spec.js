@@ -5,64 +5,89 @@ describe('navsearch.vue', () => {
 /*
 * Document list testing
 */
-  it('Select and deselect all documents', () => {
+  it('Select and deselect methods', done => {
     const wrapper = mount(Navsearch)
 
-    wrapper.vm.selectAll()
-    expect(wrapper.vm.checkedAOs.length).to.equal(wrapper.vm.aoDocuments.length)
-    wrapper.vm.deselectAll()
-    expect(wrapper.vm.checkedAOs.length).to.equal(0)
+    wrapper.vm.$watch('aoDocuments', function (newVal, oldVal) { // must retrieve aodocuments first
+      wrapper.vm.selectAll()
+      expect(wrapper.vm.checkedAOs.length).to.equal(wrapper.vm.aoDocuments.length)
+      wrapper.vm.deselectAll()
+      expect(wrapper.vm.checkedAOs.length).to.equal(0)
+      done()
+    })
   })
 
-  it('select 1 and select all', () => {
+  it('select 1 and select all', done => {
     const wrapper = mount(Navsearch, {
       propsData: { activeSidebar: 'viz' }
     })
-    wrapper.vm.checkedAOs.push('AO No. 2017-0001-J')
-    expect(wrapper.vm.checkedAOs.length).to.equal(1)
 
-    wrapper.vm.selectAll()
-    expect(wrapper.vm.checkedAOs.length).to.equal(wrapper.vm.aoDocuments.length + 1)
+    wrapper.vm.$watch('aoDocuments', function (newVal, oldVal) { // must retrieve aodocuments first
+      wrapper.update()
+      wrapper.vm.checkedAOs.push('AO No. 2017-0001-J')
+      wrapper.update()
+      expect(wrapper.vm.checkedAOs.length).to.equal(1)
+
+      wrapper.first('#selectAll').trigger('click')
+      wrapper.update()
+      expect(wrapper.vm.checkedAOs.length).to.equal(wrapper.vm.aoDocuments.length + 1)
+
+      done()
+    })
   })
 
   it('select 1 and deselect all', () => {
     const wrapper = mount(Navsearch, {
       propsData: { activeSidebar: 'viz' }
     })
+
     wrapper.vm.checkedAOs.push('AO No. 2017-0001-J')
     expect(wrapper.vm.checkedAOs.length).to.equal(1)
 
-    wrapper.vm.deselectAll()
+    wrapper.first('#deselectall').trigger('click')
+    wrapper.update()
     expect(wrapper.vm.checkedAOs.length).to.equal(0)
   })
 
-  it('render ao list', () => {
+  it('render ao list', done => {
     const wrapper = mount(Navsearch, {
       propsData: { activeSidebar: 'doc' }
     })
-    expect(wrapper.find('#side-menu li').length).to.equal(wrapper.vm.aoDocuments.length)
-  })
 
-  it('hide and unhide select and unselect', done => {
-    const wrapper = mount(Navsearch, {
-      propsData: { activeSidebar: 'doc' }
+    wrapper.vm.$watch('aoDocuments', function (newVal, oldVal) { // must retrieve aodocuments first
+      expect(wrapper.find('#side-menu li').length).to.equal(wrapper.vm.aoDocuments.length)
+      done()
     })
-    expect(wrapper.find('#export-options')[0].hasStyle('display', 'none')).to.equal(true)
-
-    wrapper.vm.checkedAOs.push('AO No. 2017-0001-J')
-
-    wrapper.vm.$nextTick().then(() => {
-      // show export-options
-      expect(wrapper.find('#export-options')[0].hasStyle('display', 'none')).to.equal(false)
-    }).then(done, done)
   })
-  /*
-  * End of Document list testing
-  */
 
-  /*
-  * Filter modal
-  */
+  // it('hide and unhide select and unselect', (done) => {
+  //   const wrapper = mount(Navsearch, {
+  //     propsData: { activeSidebar: 'doc' }
+  //   })
+  //   expect(wrapper.first('#export-options').hasStyle('display', 'none')).to.equal(true)
+
+  //   wrapper.vm.checkedAOs.push('AO No. 2017-0001-J')
+
+  //   wrapper.update()
+
+  //   expect(wrapper.first('#export-options').hasStyle('display', 'none')).to.equal(false)
+
+  //   // wrapper.vm.$nextTick(() => {
+  //   //   // show export-options
+  //   //   expect(wrapper.first('#export-options').hasStyle('display', 'none')).to.equal(false)
+  //   //   wrapper.first('#deselectall').trigger('click')
+  //   //   wrapper.vm.$nextTick().then(() => {
+  //   //     expect(wrapper.first('#export-options').hasStyle('display', 'none')).to.equal(true)
+  //   //   }).then(done, done)
+  //   // })
+  // })
+  // /*
+  // * End of Document list testing
+  // */
+
+  // /*
+  // * Filter modal
+  // */
 
   it('show filter modal', done => {
     const wrapper = mount(Navsearch, {
@@ -103,13 +128,13 @@ describe('navsearch.vue', () => {
       expect(dateDiv.hasClass('open')).to.equal(true)
     }).then(done, done)
   })
-  /*
-  * End of Filter modal
-  */
+  // /*
+  // * End of Filter modal
+  // */
 
-  /*
-  *  Date validation testing
-  */
+  // /*
+  // *  Date validation testing
+  // */
   it('validate date yyyy-mm-dd', done => {
     const wrapper = mount(Navsearch, {
       propsData: { activeSidebar: 'doc' }
