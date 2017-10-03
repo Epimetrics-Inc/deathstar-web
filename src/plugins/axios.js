@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 export default axios.create({
-  baseURL: 'http://35.198.220.54/api/',
+  baseURL: process.env.SERVER_URL,
   timeout: 10000,
   headers: {
     'Accept': 'application/json',
