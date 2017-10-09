@@ -122,7 +122,6 @@
         <div class="modal-custom-header">Signed by</div>
         <div>
           <input class="form-control" type="text" v-model="signedBy">
-
         </div>
     </modal>
     <div class="overlay" v-show="isLoading">
@@ -140,6 +139,7 @@ import 'vue-awesome/icons/plus'
 import 'vue-awesome/icons/download'
 import 'vue-awesome/icons/calendar'
 import 'vue-awesome/icons/spinner'
+import 'vue-awesome/icons/refresh'
 
 import dropdown from 'uiv/src/components/dropdown/Dropdown.vue'
 import modal from 'uiv/src/components/modal/Modal.vue'
@@ -247,10 +247,10 @@ export default {
         this.isLoading = false
         this.aoDocuments = res.data.results
         this.totalPage = Math.ceil(parseInt(res.data.count) / this.numDocPerPage)
-      }).catch(function (error) {
+      }).catch(error => {
         this.isLoading = false
-        // TODO: fix error handling
-        error({ statusCode: 500, message: 'can\'t fetch data' })
+        console.log(error)
+        this.$emit('error')
       })
     }
   },
@@ -314,22 +314,9 @@ export default {
   margin: 15px auto;
 }
 
-
-.search-wrapper .overlay {
-  background: #e9e9e9;
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  opacity: 0.5;
-  margin:0;
-  text-align: center;
-}
-
 .overlay .fa-icon {
   height: 100%;
-  width: 50%;
+  width: 40%;
 }
 
 /* Filter modal */

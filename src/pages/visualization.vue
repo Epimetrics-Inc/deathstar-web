@@ -5,7 +5,9 @@
         <navheader active-sidebar="viz" v-on:tooglesidebar="sidebarCollapse=!sidebarCollapse"></navheader>
     		<collapse class="navbar-default navbar-collapse sidebar" v-model="sidebarCollapse">
             <div class="sidebar-nav">
-                
+                <div class="alert alert-danger error" v-if="isError">
+                    There was an error communicating with the server. Please refresh the page.
+                </div>
                 <div class="sidebar-vis-options">
                     <div class="form-group form-inline">
                         <label>Type</label>
@@ -15,13 +17,14 @@
                         </select>
                     </div>
                 </div>
-		        		
-      					<navsearch is-doc-active="false"></navsearch>
+      					<navsearch is-doc-active="false" v-on:error="isError=true"></navsearch>
                 <div>
                     <button class="btn btn-default visualize-button" href="#" type="button">
                         Visualize
                     </button>
                 </div>
+                <div class="overlay" v-if="isError"></div>
+
             </div>
             <!-- /.sidebar-collapse -->
         </collapse>
@@ -58,7 +61,8 @@ export default {
   },
   data: function () {
     return {
-      sidebarCollapse: true
+      sidebarCollapse: true,
+      isError: false
     }
   }
 }

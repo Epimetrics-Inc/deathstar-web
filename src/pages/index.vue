@@ -6,7 +6,11 @@
 
         <collapse class="navbar-default navbar-collapse sidebar" v-model="sidebarCollapse">
             <div class="sidebar-nav">
-            <navsearch is-doc-active="true" v-on:clickDocument="clickDocument"></navsearch>
+                <div class="alert alert-danger error" v-if="isError">
+                    There was an error communicating with the server. Please refresh the page.
+                </div>
+                <navsearch is-doc-active="true" v-on:error="isError=true" v-on:clickDocument="clickDocument"></navsearch>
+                <div class="overlay" v-if="isError"></div>
             </div>
             <!-- /.sidebar-collapse -->
         </collapse>
@@ -111,7 +115,8 @@ export default {
       fontSize: 15,
       sidebarCollapse: true,
       doc: false,
-      annex: ''
+      annex: '',
+      isError: false
     }
   },
   methods: {
@@ -146,6 +151,9 @@ export default {
             }
           }
         }
+      }).catch(error => {
+        this.isError = true
+        console.log(error)
       })
     },
     insert_image: function (str, startline, insertline, image) { // inserting image in body
