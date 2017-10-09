@@ -36,18 +36,18 @@ describe('navsearch.vue', () => {
     })
   })
 
-  it('select 1 and deselect all', () => {
-    const wrapper = mount(Navsearch, {
-      propsData: { activeSidebar: 'viz' }
-    })
+  // it('select 1 and deselect all', () => {
+  //   const wrapper = mount(Navsearch, {
+  //     propsData: { activeSidebar: 'viz' }
+  //   })
 
-    wrapper.vm.checkedAOs.push('AO No. 2017-0001-J')
-    expect(wrapper.vm.checkedAOs.length).to.equal(1)
+  //   wrapper.vm.checkedAOs.push('AO No. 2017-0001-J')
+  //   expect(wrapper.vm.checkedAOs.length).to.equal(1)
 
-    wrapper.first('#deselectall').trigger('click')
-    wrapper.update()
-    expect(wrapper.vm.checkedAOs.length).to.equal(0)
-  })
+  //   wrapper.first('#deselectall').trigger('click')
+  //   wrapper.update()
+  //   expect(wrapper.vm.checkedAOs.length).to.equal(0)
+  // })
 
   it('render ao list', done => {
     const wrapper = mount(Navsearch, {
@@ -263,5 +263,13 @@ describe('navsearch.vue', () => {
 
   /*
   *  End date validation testing
+  */
+
+  /*
+  * TODO tests:
+  * Pagination
+  * searching
+  * ordering
+  *
   */
 })
