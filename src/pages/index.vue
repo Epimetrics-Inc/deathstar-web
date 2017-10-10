@@ -1,9 +1,6 @@
 <template>
     <div id="wrapper">
 
-        <!-- Navigation -->
-        <navheader active-sidebar="doc" v-on:tooglesidebar="sidebarCollapse=!sidebarCollapse"></navheader>
-
         <collapse class="navbar-default navbar-collapse sidebar" v-model="sidebarCollapse">
             <div class="sidebar-nav">
                 <div class="alert alert-danger error" v-if="isError">
@@ -109,11 +106,10 @@ export default {
   },
   head: {
   },
-
+  props: ['sidebarCollapse'],
   data: function () {
     return {
       fontSize: 15,
-      sidebarCollapse: true,
       doc: false,
       annex: '',
       isError: false

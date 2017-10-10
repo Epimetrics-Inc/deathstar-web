@@ -10,8 +10,12 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'index',
+      name: 'documents',
       component: Index
+    },
+    {
+      path: '/documents',
+      redirect: '/'
     },
     {
       path: '/visualization',

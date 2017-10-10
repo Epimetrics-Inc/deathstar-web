@@ -1,9 +1,6 @@
 <template>
     <div id="wrapper">
-
-        <!-- Navigation -->	
-        <navheader active-sidebar="viz" v-on:tooglesidebar="sidebarCollapse=!sidebarCollapse"></navheader>
-    		<collapse class="navbar-default navbar-collapse sidebar" v-model="sidebarCollapse">
+        <collapse class="navbar-default navbar-collapse sidebar" v-model="sidebarCollapse">
             <div class="sidebar-nav">
                 <div class="alert alert-danger error" v-if="isError">
                     There was an error communicating with the server. Please refresh the page.
@@ -17,7 +14,7 @@
                         </select>
                     </div>
                 </div>
-      					<navsearch is-doc-active="false" v-on:error="isError=true"></navsearch>
+                <navsearch is-doc-active="false" v-on:error="isError=true"></navsearch>
                 <div>
                     <button class="btn btn-default visualize-button" href="#" type="button">
                         Visualize
@@ -32,7 +29,9 @@
         <!-- Page Content -->
         <div id="page-wrapper">
             <div class="container-fluid">
-
+                <iframe class="viz-preview" src="http://www.mcdonalds.com.ph"> <!-- example only -->
+                    <p>Your browser does not support iframes.</p>
+                </iframe>
             </div>
             <!-- /.container-fluid -->
         </div>
@@ -59,9 +58,9 @@ export default {
     collapse,
     icon
   },
+  props: ['sidebarCollapse'],
   data: function () {
     return {
-      sidebarCollapse: true,
       isError: false
     }
   }
@@ -88,6 +87,11 @@ export default {
 
 .sidebar .visualize-button{
   float:right;
+}
+
+.viz-preview {
+  width:100%;
+  height:85vh;
 }
 /*End of Visualisation Sidebar*/
 </style>
