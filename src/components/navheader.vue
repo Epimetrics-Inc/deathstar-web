@@ -11,7 +11,7 @@
                   </button>
 
 
-              <router-link class="navbar-brand" to="/">Omnibus</router-link>
+              <router-link class="navbar-brand" to="/">Holocron</router-link>
           </div>
           <!-- /.navbar-header -->
 

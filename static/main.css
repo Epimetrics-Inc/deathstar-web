@@ -82,7 +82,7 @@ button .fa-icon{
 .navbar-top-links .active a{
   font-weight: bold;
 }
-
+/*
 .dropdown-menu {
   width: 200px;
 }
@@ -109,7 +109,7 @@ button .fa-icon{
   opacity: .86;
   border-radius: 4px;
   cursor:default
-}
+}*/
 
 .sidebar-nav {
   height:inherit;
@@ -184,6 +184,10 @@ button .fa-icon{
 }
 .sidebar button {
   height:34px;
+}
+
+.sidebar .btn-xs{
+  height:auto;
 }
 
 .sidebar .icon-button {

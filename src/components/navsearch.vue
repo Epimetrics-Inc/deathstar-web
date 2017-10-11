@@ -6,7 +6,7 @@
                 <input type="text" class="form-control" placeholder="Search..." v-model.lazy="searchString"/>
                 <icon class="form-control-feedback" name="search"></icon>
             </div>
-            <button class=" btn btn-default search-option icon-button" type="button" v-on:click="isFilterModalOpen=true" id="filter-button">
+            <button class=" btn btn-default search-option icon-button" type="button" v-on:click="openModal()" id="filter-button">
                 <icon name="filter"></icon>
             </button>
             <div v-if="isDocActive == 'true'">
@@ -18,10 +18,10 @@
         
         <transition name="fade">
             <div id = "export-options" v-show="checkedAOs.length > 0">
-                <button v-on:click="selectAll()" class="btn btn-default selector-button" id="selectAll" type="button">
+                <button v-on:click="selectAllDocs()" class="btn btn-default selector-button" id="selectAll" type="button">
                     Select all
                 </button>
-                <button v-on:click="deselectAll()" class="btn btn-default selector-button" id="deselectall" href="#" type="button">
+                <button v-on:click="deselectAllDocs()" class="btn btn-default selector-button" id="deselectall" href="#" type="button">
                     Deselect all
                 </button>
                     <button v-on:click="downloadDocs()" v-if="isDocActive == 'true'" class="btn btn-default search-option export-button icon-button" type="button">
@@ -50,29 +50,42 @@
 
     <pagination v-model="currentPage" :total-page="totalPage" :max-size="maxSize" :size="'sm'" :boundary-links="true" :direction-links="false"></pagination>
 
-    <modal v-model="isFilterModalOpen" title="Search options" class="modal-wrapper" :footer="false" @hide="updateQuery()">
-        <div class="modal-custom-header">Themes</div>
+    <modal v-model="isModalOpen" title="Search options" class="modal-wrapper" @hide="updateQuery()" :backdrop="false">
+        <div slot="footer">
+            <button type="button" class="btn btn-default" v-on:click="cancelModal()">Cancel</button>
+            <button type="button" class="btn btn-default" v-on:click="revertModal()">Revert</button>
+            <button type="button" class="btn btn-default" v-on:click="okModal()">OK</button>
+        </div>
+
+        <div class="modal-custom-header">
+            Themes
+        </div>
+        <button class=" btn btn-default btn-xs" type="button" v-on:click="selectAllThemes()">
+            Select all
+        </button>
+        <button class=" btn btn-default btn-xs" type="button" v-on:click="deselectAllThemes()">
+            Deselect all
+        </button>
         <div id="filter-themes">
             <label class="checkbox-inline" v-for="filter in filters">
-                <input type="checkbox" v-bind:value="filter" v-model="checkedFilters">
+                <input type="checkbox" v-bind:value="filter" v-model="filterModalTemp.checkedFilters">
                 {{ filter }}
             </label>
         </div>
-
         <hr>
 
         <div class="modal-custom-header">Sort by</div>
         <div id="filter-sort">
             <label class="radio-inline">
-                <input type="radio" v-model="sortBy" value = "newest">
+                <input type="radio" v-model="filterModalTemp.sortBy" value = "newest">
                 Date (newest)
             </label>
             <label class="radio-inline">
-                <input type="radio" v-model="sortBy" value = "oldest">
+                <input type="radio" v-model="filterModalTemp.sortBy" value = "oldest">
                 Date (oldest)
             </label>
             <label class="radio-inline">
-                <input type="radio" v-model="sortBy" value = "relevance" disabled>
+                <input type="radio" v-model="filterModalTemp.sortBy" value = "relevance" disabled>
                 Relevance
             </label>
         </div>
@@ -84,7 +97,7 @@
             <dropdown class="form-group" id="filter-date-from">
                 <label for="datefrom">From </label>
                 <div class="input-group" id="datefrom">
-                    <input class="form-control" type="text" v-model.lazy="dateFrom">
+                    <input class="form-control" type="text" v-model.lazy="filterModalTemp.dateFrom">
                     <div class="input-group-btn">
                         <button class="btn btn-default" type="button" data-role="trigger">
                             <icon name="calendar"></icon>
@@ -93,7 +106,7 @@
                 </div>
                 <template slot="dropdown">
                     <li>
-                        <date-picker v-model="dateFrom" :today-btn="false" :clear-btn="false" class="datepicker"></date-picker>
+                        <date-picker v-model="filterModalTemp.dateFrom" :today-btn="false" :clear-btn="false" class="datepicker"></date-picker>
                     </li>
                 </template>
             </dropdown>
@@ -103,7 +116,7 @@
             <dropdown class="form-group" id="filter-date-from">
                 <label for="dateTo">To: </label>
                 <div class="input-group" id="dateto">
-                    <input class="form-control" type="text" v-model.lazy="dateTo">
+                    <input class="form-control" type="text" v-model.lazy="filterModalTemp.dateTo">
                     <div class="input-group-btn">
                         <button class="btn btn-default" type="button" data-role="trigger">
                             <icon name="calendar"></icon>
@@ -112,7 +125,7 @@
                 </div>
                 <template slot="dropdown">
                     <li>
-                        <date-picker v-model="dateTo" :today-btn="false" :clear-btn="false" class="datepicker"></date-picker>
+                        <date-picker v-model="filterModalTemp.dateTo" :today-btn="false" :clear-btn="false" class="datepicker"></date-picker>
                     </li>
                 </template>
             </dropdown>
@@ -121,7 +134,7 @@
         <hr>
         <div class="modal-custom-header">Signed by</div>
         <div>
-          <input class="form-control" type="text" v-model="signedBy">
+          <input class="form-control" type="text" v-model="filterModalTemp.signedBy">
         </div>
     </modal>
     <div class="overlay" v-show="isLoading">
@@ -160,19 +173,22 @@ export default {
   data: function () {
     return {
       aoDocuments: [],
+      checkedAOs: [],
+      isModalOpen: false,
       filters: [
         'Adolescent Health',
         'Geriatric Health',
         'MNCHN',
         'Special Population'
       ],
-      checkedAOs: [],
-      checkedFilters: [],
-      sortBy: 'oldest',
-      isFilterModalOpen: false,
-      dateFrom: '',
-      dateTo: '',
-      signedBy: '',
+      filterModal: {
+        dateFrom: '',
+        dateTo: '',
+        signedBy: '',
+        checkedFilters: [],
+        sortBy: 'oldest'
+      },
+      filterModalTemp: {},
       searchString: '',
       currentPage: 1, // used for pagination
       maxSize: 4, // used for pagination
@@ -183,26 +199,38 @@ export default {
   },
   props: ['isDocActive'],
   methods: {
-    selectAll: function (event) {
+    selectAllDocs: function (event) {
+      this.checkedAOs = []
       for (let ao of this.aoDocuments) {
         this.checkedAOs.push(ao.pk)
       }
     },
-    deselectAll: function (event) {
+    deselectAllDocs: function (event) {
       this.checkedAOs = []
     },
+    selectAllThemes: function (event) {
+      if (this.filters.length !== this.filterModalTemp.checkedFilters.length) {
+        this.filterModalTemp.checkedFilters = []
+        for (let filter of this.filters) {
+          this.filterModalTemp.checkedFilters.push(filter)
+        }
+      }
+    },
+    deselectAllThemes: function (event) {
+      this.filterModalTemp.checkedFilters = []
+    },
     downloadDocs: function (event) {
-      this.deselectAll()
+      this.deselectAllDocs()
       alert('Document download')
     },
     validateDate: function (dateObjectName) {
-      var date = new Date(this[dateObjectName])
+      var date = new Date(this.filterModal[dateObjectName])
       var year
       var month
       var day
 
       if (isNaN(date)) {
-        this[dateObjectName] = ''
+        this.filterModal[dateObjectName] = ''
       } else {
         month = '' + (date.getMonth() + 1)
         day = '' + date.getDate()
@@ -221,7 +249,7 @@ export default {
     updateQuery: function () {
       var order
 
-      switch (this.sortBy) {
+      switch (this.filterModal.sortBy) {
         case 'newest':
           order = '-date'
           break
@@ -252,6 +280,20 @@ export default {
         console.log(error)
         this.$emit('error')
       })
+    },
+    openModal: function () {
+      this.isModalOpen = true
+      this.filterModalTemp = JSON.parse(JSON.stringify(this.filterModal)) // copies filtermodal to temp
+    },
+    okModal: function () {
+      this.filterModal = JSON.parse(JSON.stringify(this.filterModalTemp)) // copies temp to filtermodal
+      this.isModalOpen = false
+    },
+    cancelModal: function () {
+      this.isModalOpen = false
+    },
+    revertModal: function () {
+      this.filterModalTemp = JSON.parse(JSON.stringify(this.filterModal)) // copies filtermodal to temp
     }
   },
   watch: {
@@ -271,7 +313,7 @@ export default {
   },
   mounted: function () {
     for (let filter of this.filters) { // initialize to check all filters
-      this.checkedFilters.push(filter)
+      this.filterModal.checkedFilters.push(filter)
     }
     this.queryGetDocuments()
   }
