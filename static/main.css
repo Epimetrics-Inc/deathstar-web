@@ -36,12 +36,26 @@ button .fa-icon{
   height:100%;
 }
 
+.overlay {
+  background: #e9e9e9;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  opacity: 0.5;
+  margin:0;
+  text-align: center;
+  height:100%;
+}
+
+body {
+  background-color: #EEF5F9;
+}
+
 /* End of general components css */
 
 /*Start of CSS of document and visualization pages*/
-#wrapper {
-  background-color: #DEDEDE;
-}
 #wrapper {
   width: 100%;
 }
@@ -61,7 +75,7 @@ button .fa-icon{
 }
 
 .navbar{
-  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.2);
   margin-bottom: 0;
   border:0px;
 }
@@ -115,7 +129,7 @@ button .fa-icon{
   height:inherit;
   display: flex;
   flex-flow:column;
-  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  background-color: #fff;
 }
 
 .sidebar-nav > div{
@@ -192,18 +206,6 @@ button .fa-icon{
 
 .sidebar .icon-button {
   width: 39px;
-}
-
-.sidebar .overlay {
-  background: #e9e9e9;
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  opacity: 0.5;
-  margin:0;
-  text-align: center;
 }
 
 .sidebar .error {

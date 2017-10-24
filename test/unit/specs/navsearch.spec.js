@@ -25,6 +25,8 @@ describe('navsearch.vue', () => {
     wrapper.vm.$watch('aoDocuments', function (newVal, oldVal) { // must retrieve aodocuments first
       wrapper.update()
       wrapper.vm.checkedAOs.push('AO No. 2017-0001-J')
+      wrapper.first('.list-checkbox input[type=checkbox]').trigger('click')
+      wrapper.first('.list-checkbox input[type=checkbox]').trigger('change')
       wrapper.update()
       expect(wrapper.vm.checkedAOs.length).to.equal(1)
 

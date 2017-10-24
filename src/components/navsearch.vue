@@ -50,7 +50,7 @@
 
     <pagination v-model="currentPage" :total-page="totalPage" :max-size="maxSize" :size="'sm'" :boundary-links="true" :direction-links="false"></pagination>
 
-    <modal v-model="isModalOpen" title="Search options" class="modal-wrapper" @hide="updateQuery()" :backdrop="false">
+    <modal v-model="isModalOpen" title="Search options" class="modal-wrapper" :backdrop="false">
         <div slot="footer">
             <button type="button" class="btn btn-default" v-on:click="cancelModal()">Cancel</button>
             <button type="button" class="btn btn-default" v-on:click="revertModal()">Revert</button>
@@ -288,6 +288,7 @@ export default {
     okModal: function () {
       this.filterModal = JSON.parse(JSON.stringify(this.filterModalTemp)) // copies temp to filtermodal
       this.isModalOpen = false
+      this.updateQuery()
     },
     cancelModal: function () {
       this.isModalOpen = false
@@ -329,7 +330,7 @@ export default {
   min-height: 50px;
 }
 
-.search-wrapper > div{
+.sidebar-search {
   margin-right:15px;
   margin-left:15px;
   margin-top:15px;

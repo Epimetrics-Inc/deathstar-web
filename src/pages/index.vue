@@ -97,6 +97,7 @@ import icon from 'vue-awesome/components/Icon'
 
 import { getDocument } from '@/api/api'
 import { getImageResource } from '@/api/gitresource'
+
 export default {
   components: {
     navheader,
@@ -168,6 +169,8 @@ export default {
 
 #doh-logo{
   float:left;
+  height:100px;
+  width:100px;
 }
 
 #page-wrapper .doc-preview{

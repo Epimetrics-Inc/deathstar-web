@@ -1,55 +1,17 @@
 <template>
-    <div id="wrapper">
-        <collapse class="navbar-default navbar-collapse sidebar" v-model="sidebarCollapse">
-            <div class="sidebar-nav">
-                <div class="alert alert-danger error" v-if="isError">
-                    There was an error communicating with the server. Please refresh the page.
-                </div>
-                <div class="sidebar-vis-options">
-                    <div class="form-group form-inline">
-                        <label>Type</label>
-                        <select class="form-control">
-                            <option>Word Cloud</option>
-                            <option>Frequency Chart</option>
-                        </select>
-                    </div>
-                </div>
-                <navsearch is-doc-active="false" v-on:error="isError=true"></navsearch>
-                <div>
-                    <button class="btn btn-default visualize-button" href="#" type="button">
-                        Visualize
-                    </button>
-                </div>
-                <div class="overlay" v-if="isError"></div>
-
-            </div>
-            <!-- /.sidebar-collapse -->
-        </collapse>
-            <!-- /.navbar-static-side -->
-        <!-- Page Content -->
-        <div id="page-wrapper">
-            <div class="container-fluid">
-                <iframe class="viz-preview" src="http://www.mcdonalds.com.ph"> <!-- example only -->
-                    <p>Your browser does not support iframes.</p>
-                </iframe>
-            </div>
-            <!-- /.container-fluid -->
-        </div>
-        <!-- /#page-wrapper -->
-
-    </div>
-    <!-- /#wrapper -->
+		<div id="wrapper">
+		</div>
 </template>
 
 <script>
-import 'vue-awesome/icons/search'
-import 'vue-awesome/icons/filter'
-import 'vue-awesome/icons/check'
+import 'vue-awesome/icons/spinner'
 
 import navheader from '@/components/navheader.vue'
 import navsearch from '@/components/navsearch.vue'
 import collapse from 'uiv/src/components/collapse/Collapse.vue'
 import icon from 'vue-awesome/components/Icon'
+
+import { getVisualization } from '@/api/gitresource'
 
 export default {
   components: {
@@ -61,7 +23,35 @@ export default {
   props: ['sidebarCollapse'],
   data: function () {
     return {
-      isError: false
+      isError: false,
+      filters: [
+        {
+          full: 'Adolescent Health',
+          id: 'adolescent'
+        },
+        {
+          full: 'Geriatric Health',
+          id: 'geriatric'
+        },
+        {
+          full: 'MNCHN',
+          id: 'mnchn'
+        },
+        {
+          full: 'Special Population',
+          id: 'specpop'
+        }
+      ],
+      themeOne: 'adolescent',
+      themeTwo: 'geriatric',
+      vizURL: false,
+      isVizLoading: false
+    }
+  },
+  methods: {
+    clickVisualization: function () {
+      this.isVizLoading = true
+      this.vizURL = getVisualization(this.themeOne, this.themeTwo)
     }
   }
 }
@@ -89,9 +79,19 @@ export default {
   float:right;
 }
 
+.overlay .fa-icon {
+  height: 100%;
+  width: 20%;
+}
+
+.viz-wrapper {
+  position: relative;
+}
+
 .viz-preview {
   width:100%;
   height:85vh;
+  background:white;
 }
 /*End of Visualisation Sidebar*/
 </style>
