@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <navheader v-on:tooglesidebar="sidebarCollapse=!sidebarCollapse"></navheader>
+    <navheader v-bind:active-page="$route.name" v-on:tooglesidebar="sidebarCollapse=!sidebarCollapse"></navheader>
     <transition name="page">
       <router-view v-bind:sidebar-collapse="sidebarCollapse"></router-view>
     </transition>

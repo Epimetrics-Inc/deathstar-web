@@ -4,13 +4,13 @@
             <div class="row">
 
                 <!--First column-->
-                <div class="col-md-6">
+                <div class="col-sm-6">
                      © 2017 Copyright: <a> EpiMetrics </a>
                 </div>
                 <!--/.First column-->
 
                 <!--Second column-->
-                <div class="col-md-6 pull-right">
+                <div class="col-sm-6 pull-right">
                     <div class="footer-links pull-right">
                       <a>How to generate visualization</a>
                       <router-link :to="{ name: 'about' }">About</router-link>

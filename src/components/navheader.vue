@@ -3,7 +3,7 @@
     <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
         <div class="container-fluid">
           <div class="navbar-header">
-              <button type="button" class="navbar-toggle" v-on:click="toogleSideBar">
+              <button type="button" class="navbar-toggle" v-on:click="toogleSideBar" v-if="activePage === 'documents'">
                   <span class="sr-only">Toggle navigation</span>
                   <span class="icon-bar"></span>
                   <span class="icon-bar"></span>
@@ -38,6 +38,7 @@ export default {
   components: {
     icon
   },
+  props: ['activePage'],
   data: function () {
     return {
       searchString: ''

@@ -7,12 +7,15 @@
         <!-- Page Content -->
         <div id="page-wrapper">
           <div class="container-fluid doc-preview" v-if="doc">
-              <div class="zoom-buttons">
+              <div class="preview-buttons">
                   <a id="zoom-out-button" v-on:click="zoomOut()">
                       <icon name="search-minus"></icon>
                   </a>
                   <a id="zoom-in-button" v-on:click="zoomIn()">
                       <icon name="search-plus"></icon>
+                  </a>
+                  <a id="download-button" v-on:click="download()">
+                      <icon name="download"></icon>
                   </a>
               </div>
               <div v-bind:style="{fontSize:fontSize + 'px'}" id="zoom-wrapper">
@@ -78,6 +81,7 @@
 // icon imports
 import 'vue-awesome/icons/search-plus'
 import 'vue-awesome/icons/search-minus'
+import 'vue-awesome/icons/download'
 
 import collapse from 'uiv/src/components/collapse/Collapse.vue'
 import icon from 'vue-awesome/components/Icon'
@@ -119,6 +123,9 @@ export default {
       if (this.fontSize > 5) { // minimum 5
         this.fontSize = (this.fontSize - 5)
       }
+    },
+    download: function () {
+      alert('download')
     },
     fetchDocument: function () {
       let document = this.$route.params.id
@@ -204,38 +211,43 @@ export default {
   width:100%;
 }
 
-#page-wrapper .zoom-buttons{
-  position: absolute;
+#page-wrapper .preview-buttons{
   top:100px;
   right: 50px;
+  position: fixed;
   background-color: rgba(229,229,229, 0.2);
   border-radius: 30px;
   padding: 5px
 }
 
-#page-wrapper .zoom-buttons:hover{
-  background-color: rgba(229,229,229, 0.8);
+#page-wrapper .preview-buttons:hover{
+  background-color: rgba(229,229,229, 0.6);
 }
 
-#page-wrapper .zoom-buttons > a{
+#page-wrapper .preview-buttons > a{
   margin:5px;
   border-color: transparent;
-  opacity:.2;
+  opacity:.1;
   color: #000000;
   padding:5px;
 }
 
-#page-wrapper .zoom-buttons > a .fa-icon{
+#page-wrapper .preview-buttons > a .fa-icon{
   width: 30px;
   height: 40px;
 }
 
-#page-wrapper .zoom-buttons > a:hover{
-    opacity:.6;
+#page-wrapper .preview-buttons > a:hover{
+  opacity:.6;
 }
 
-#page-wrapper .zoom-buttons > a:active{
-    opacity:.5;
-    transition: opacity .5;
+#page-wrapper .preview-buttons > a:active{
+  opacity:.5;
+  transition: opacity .5;
 }
+
+.preview-buttons a#download-button {
+  margin-left:20px;
+}
+
 </style>
