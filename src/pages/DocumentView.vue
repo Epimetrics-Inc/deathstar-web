@@ -230,6 +230,7 @@ export default {
   opacity:.1;
   color: #000000;
   padding:5px;
+  cursor:pointer;
 }
 
 #page-wrapper .preview-buttons > a .fa-icon{
