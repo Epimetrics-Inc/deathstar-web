@@ -1,19 +1,27 @@
 <template>
   <div id="app">
-	  <transition name="page">
-  			<router-view/>
-		</transition>
+    <navheader v-on:tooglesidebar="sidebarCollapse=!sidebarCollapse"></navheader>
+    <transition name="page">
+      <router-view v-bind:sidebar-collapse="sidebarCollapse"></router-view>
+    </transition>
     <navfooter></navfooter>
   </div>
 </template>
 
 <script>
 import navfooter from '@/components/navfooter'
+import navheader from '@/components/navheader'
 
 export default {
   name: 'app',
   components: {
-    navfooter
+    navfooter,
+    navheader
+  },
+  data: function () {
+    return {
+      sidebarCollapse: true
+    }
   }
 }
 </script>

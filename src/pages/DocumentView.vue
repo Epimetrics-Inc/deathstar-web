@@ -1,6 +1,5 @@
 <template>
     <div id="wrapper">
-        <navheader></navheader>
         <div class="alert alert-danger error" v-if="errorMessage">
             {{ errorMessage }}
         </div>
@@ -80,8 +79,6 @@
 import 'vue-awesome/icons/search-plus'
 import 'vue-awesome/icons/search-minus'
 
-import navheader from '@/components/navheader'
-
 import collapse from 'uiv/src/components/collapse/Collapse.vue'
 import icon from 'vue-awesome/components/Icon'
 
@@ -90,7 +87,6 @@ import { getImageResource } from '@/api/gitresource'
 
 export default {
   components: {
-    navheader,
     collapse,
     icon
   },

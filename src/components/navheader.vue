@@ -38,18 +38,35 @@ export default {
   components: {
     icon
   },
-  props: ['searchString'],
+  data: function () {
+    return {
+      searchString: ''
+    }
+  },
   methods: {
     toogleSideBar: function (event) {
       this.$emit('tooglesidebar')
     },
     searchDocuments: function () {
-      // checks if prop is undefined
-      if (this.searchString === undefined) {
+      this.$router.push({name: 'documents', query: { search: this.searchString }})
+    },
+    initSearchString: function () {
+      if (this.$route.hasOwnProperty('query')) {
+        if (this.$route.query.hasOwnProperty('search')) {
+          this.searchString = this.$route.query.search
+        } else {
+          this.searchString = ''
+        }
+      } else {
         this.searchString = ''
       }
-      this.$router.push({name: 'documents', query: { search: this.searchString }})
     }
+  },
+  mounted: function () {
+    this.initSearchString()
+  },
+  watch: {
+    '$route': 'initSearchString'
   }
 }
 </script>

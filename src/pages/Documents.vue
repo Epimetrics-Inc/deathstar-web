@@ -1,6 +1,5 @@
 <template>
     <div id="wrapper">
-        <navheader v-bind:search-string="searchString" v-on:tooglesidebar="sidebarCollapse=!sidebarCollapse"></navheader>
         <div class="container-fluid">    
             <div class="row">
               <div class="navbar-default col-md-3 sidebar">
@@ -138,23 +137,21 @@ import collapse from 'uiv/src/components/collapse/Collapse.vue'
 import dropdown from 'uiv/src/components/dropdown/Dropdown.vue'
 import pagination from 'uiv/src/components/pagination/Pagination.vue'
 
-import navheader from '@/components/navheader'
 import datePicker from '@/components/datepicker/DatePicker.vue'
 
 import { getDocuments } from '@/api/api'
 
 export default {
   components: {
-    navheader,
     datePicker,
     icon,
     collapse,
     dropdown,
     pagination
   },
+  props: ['sidebarCollapse'],
   data: function () {
     return {
-      sidebarCollapse: true,
       aoDocuments: [],
       filters: [
         'Adolescent Health',
