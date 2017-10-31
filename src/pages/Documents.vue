@@ -93,11 +93,19 @@
                       {{ errorMessage }}
                   </div>
                   <div class="search-wrapper" v-if="errorMessage === false">
+                    <div id = "export-options">
+                        <button class="btn btn-default selector-button" id="selectAll" type="button" v-on:click="selectAllDocs()">
+                            Select all
+                        </button>
+                        <button class="btn btn-default selector-button" id="deselectall" href="#" type="button" v-on:click="deselectAllDocs()">
+                            Deselect all
+                        </button>
+                    </div>
                     <ul class="nav document-list" id="side-menu">
-                        <li v-for="ao in aoDocuments" :key="ao.pk">
+                        <li v-for="ao in documents" :key="ao.pk">
                             <router-link v-bind:to="{ name:'document', params: { id: ao.pk } }">
                                 <div class="list-checkbox">
-                                    <input v-bind:value="ao.pk" type="checkbox">
+                                    <input v-bind:value="ao.pk" type="checkbox" v-on:click.stop v-model="checkedDocs">
                                 </div>
                                 <div class="ao-details">
                                     <div class="pull-right">
@@ -152,7 +160,8 @@ export default {
   props: ['sidebarCollapse'],
   data: function () {
     return {
-      aoDocuments: [],
+      documents: [],
+      checkedDocs: [],
       filters: [
         'Adolescent Health',
         'Geriatric Health',
@@ -269,7 +278,7 @@ export default {
 
       // init documents according to query
       getDocuments(query).then(res => {
-        this.aoDocuments = res.data.results
+        this.documents = res.data.results
         this.totalPage = Math.ceil(parseInt(res.data.count) / this.numDocPerPage)
         this.isLoading = false
 
@@ -313,6 +322,22 @@ export default {
     updateCurrentPage: function () {
       this.maxSize = this.currentPage >= 995 ? 7 : 8 // update max size
       this.updateResults()
+    },
+    /*
+    * Select all documents
+    */
+    selectAllDocs: function (event) {
+      // TODO: dapat lahat ng docs hindi yung binalik lang
+      this.checkedDocs = []
+      for (let doc of this.documents) {
+        this.checkedDocs.push(doc.pk)
+      }
+    },
+    /*
+    * Deselect or clear all documents in checkedDocs
+    */
+    deselectAllDocs: function (event) {
+      this.checkedDocs = []
     }
   },
   watch: {
@@ -409,8 +434,12 @@ export default {
   display: flex;
 }
 
-.document-list li > a > .list-checkbox{
+.document-list li > a > .list-checkbox {
   margin-top: -2px;
   margin-right: 10px;
+}
+
+#export-options {
+  margin-bottom: 15px;
 }
 </style>
