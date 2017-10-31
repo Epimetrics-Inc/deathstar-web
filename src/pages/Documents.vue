@@ -208,8 +208,64 @@ export default {
     */
     initDocoments: function () {
       this.isLoading = true
+      let query = {}
+      // init vue data values according to query
+      if (this.$route.hasOwnProperty('query') && !this.isOldRouteQuery) {
+        // sets isOldRouteQuery back to false because it was set in updateResults to true
+        this.isOldRouteQuery = false
+
+        if (this.$route.query.dateFrom) {  // setting of date
+          this.dateFrom = this.$route.query.dateFrom
+
+          if (this.$route.query.dateTo) {                   // has datefrom, has dateto
+            this.dateTo = this.$route.query.dateTo
+            query.date__range = this.dateFrom + ',' + this.dateTo
+          } else {                                          // has datefrom, no dateto
+            this.dateTo = ''
+            query.date__range = this.dateFrom + ',2100-01-01'
+          }
+        } else {
+          this.dateFrom = ''
+
+          if (this.$route.query.dateTo) {                   // no datefrom, has dateto
+            this.dateTo = this.$route.query.dateTo
+            query.date__range = '1900-01-01,' + this.dateTo
+          } else {                                          // no datefrom, no dateto
+            this.dateTo = ''
+          }
+        }
+
+        if (this.$route.query.signedBy) {
+          this.signedBy = this.$route.query.signedBy
+          query.sign__icontains = this.signedBy
+        } else {
+          this.signedBy = ''
+        }
+
+        if (this.$route.query.ordering) {
+          this.sortBy = this.$route.query.ordering
+          query.ordering = this.sortBy
+        } else {
+          this.sortBy = 'date'
+        }
+
+        if (this.$route.query.search) {
+          this.searchString = this.$route.query.search
+          query.search = this.searchString
+        } else {
+          this.searchString = ''
+        }
+
+        if (this.$route.query.page) {
+          this.currentPage = this.$route.query.page
+          query.page = this.currentPage
+        } else {
+          this.currentPage = 1
+        }
+      }
+
       // init documents according to query
-      getDocuments(this.$route.query).then(res => {
+      getDocuments(query).then(res => {
         this.aoDocuments = res.data.results
         this.totalPage = Math.ceil(parseInt(res.data.count) / this.numDocPerPage)
         this.isLoading = false
@@ -224,43 +280,6 @@ export default {
         this.errorMessage = 'There was an error communicating with the server. Please refresh the page.'
         this.isLoading = false
       })
-
-      // init vue data values according to query
-      if (this.$route.hasOwnProperty('query') && !this.isOldRouteQuery) {
-        // sets isOldRouteQuery back to false because it was set in updateResults to true
-        this.isOldRouteQuery = false
-
-        if (this.$route.query.hasOwnProperty('dateFrom')) {
-          this.dateFrom = this.$route.query.dateFrom
-        } else {
-          this.dateFrom = ''
-        }
-        if (this.$route.query.hasOwnProperty('dateTo')) {
-          this.dateTo = this.$route.query.dateTo
-        } else {
-          this.dateTo = ''
-        }
-        if (this.$route.query.hasOwnProperty('signedBy')) {
-          this.signedBy = this.$route.query.signedBy
-        } else {
-          this.dateFrom = ''
-        }
-        if (this.$route.query.hasOwnProperty('ordering')) {
-          this.sortBy = this.$route.query.ordering
-        } else {
-          this.sortBy = 'date'
-        }
-        if (this.$route.query.hasOwnProperty('search')) {
-          this.searchString = this.$route.query.search
-        } else {
-          this.searchString = ''
-        }
-        if (this.$route.query.hasOwnProperty('page')) {
-          this.currentPage = this.$route.query.page
-        } else {
-          this.currentPage = 1
-        }
-      }
     },
     /*
     * called when update results button is called
@@ -276,9 +295,9 @@ export default {
       this.$router.push({name: 'documents',
         query: {
           // filters: this.checkedFilters,
-          // dateFrom: this.dateFrom,
-          // dateTo: this.dateTo,
-          // signedBy: this.signedBy,
+          dateFrom: this.dateFrom,
+          dateTo: this.dateTo,
+          signedBy: this.signedBy,
           ordering: this.sortBy,
           page: this.currentPage,
           search: this.searchString

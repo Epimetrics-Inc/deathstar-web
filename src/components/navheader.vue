@@ -12,10 +12,24 @@
               <router-link class="navbar-brand" to="/">Holocron</router-link>
           </div>
           <!-- /.navbar-header -->
-          <button class=" btn btn-danger navbar-btn navbar-right" id="upload-button" type="button" >
-              Upload
-          </button>
-          <form class="navbar-form navbar-right" role="search" v-on:submit.prevent="searchDocuments()">
+          <ul class="nav navbar-nav navbar-right">
+              <li>
+                  <a href="#">
+                      Upload
+                  </a>
+              </li>
+              <li>
+                  <a href="#">
+                      Login
+                  </a>
+              </li>
+          </ul>
+<!--           <div>
+            <button class=" btn btn-danger navbar-btn navbar-right" id="upload-button" type="button" >
+                Upload
+            </button>
+          </div>
+ -->          <form class="navbar-form navbar-right" role="search" v-on:submit.prevent="searchDocuments()">
               <div class="input-group">
                   <input type="text" class="form-control" placeholder="Search..." v-model.lazy="searchString">
                   <span class="input-group-btn">
