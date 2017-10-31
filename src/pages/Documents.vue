@@ -50,7 +50,7 @@
                                 </div>
                                 <template slot="dropdown">
                                     <li>
-                                        <date-picker v-model="dateFrom" :today-btn="false" :clear-btn="false" class="datepicker"></date-picker>
+                                        <date-picker v-model="dateFrom" :today-btn="false" :clear-btn="false" :limit-to="dateTo" class="datepicker"></date-picker>
                                     </li>
                                 </template>
                             </dropdown>
@@ -68,7 +68,7 @@
                                 </div>
                                 <template slot="dropdown">
                                     <li>
-                                        <date-picker v-model="dateTo" :today-btn="false" :clear-btn="false" class="datepicker"></date-picker>
+                                        <date-picker v-model="dateTo" :today-btn="false" :clear-btn="false" :limit-from="dateFrom" class="datepicker"></date-picker>
                                     </li>
                                 </template>
                             </dropdown>
@@ -200,6 +200,9 @@ export default {
         }
 
         this[dateObjectName] = [year, month, day].join('-')
+        if (this.dateTo && this.dateFrom > this.dateTo) { // handle overlap
+          this[dateObjectName] = ''
+        }
       }
     },
 
