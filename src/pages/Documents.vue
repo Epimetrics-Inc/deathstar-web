@@ -258,7 +258,7 @@ export default {
           this.sortBy = this.$route.query.ordering
           query.ordering = this.sortBy
         } else {
-          this.sortBy = 'date'
+          this.sortBy = ''
         }
 
         if (this.$route.query.search) {
