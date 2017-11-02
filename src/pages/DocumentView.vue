@@ -18,9 +18,9 @@
                       <icon name="download"></icon>
                   </a>
               </div>
-              <div v-bind:style="{fontSize:fontSize + 'px'}" id="zoom-wrapper">
-                  <div class="doc-header">
-                      <img id="doh-logo" src="../static/doh_logo.png" alt="DOH logo">
+              <div v-bind:style="{fontSize: Math.round(15 * zoomLevel) + 'px'}" id="zoom-wrapper">
+                  <div class="doc-header" v-bind:style="{fontSize: 20 * zoomLevel + 'px'}">
+                      <img id="doh-logo" src="../static/doh_logo.png" alt="DOH logo" v-bind:style="{fontSize: Math.round(20 * zoomLevel) + 'px'}">
                       <div class="header-title">
                           <p>Republic of the Philippines</p>
                           <p>Department of Health</p>
@@ -98,7 +98,7 @@ export default {
   },
   data: function () {
     return {
-      fontSize: 15,
+      zoomLevel: 1,
       doc: false,
       annex: '',
       errorMessage: false
@@ -114,14 +114,14 @@ export default {
   methods: {
     zoomIn: function (event) {
       console.log('zoom in')
-      if (this.fontSize < 50) { // maximum 50
-        this.fontSize = (this.fontSize + 5)
+      if (this.zoomLevel < 5) { // maximum 50
+        this.zoomLevel = this.zoomLevel + 0.3
       }
     },
     zoomOut: function (event) {
       console.log('zoom out')
-      if (this.fontSize > 5) { // minimum 5
-        this.fontSize = (this.fontSize - 5)
+      if (this.zoomLevel > 0.2) { // minimum 5
+        this.zoomLevel = this.zoomLevel - 0.3
       }
     },
     download: function () {
@@ -184,7 +184,6 @@ export default {
   margin: auto;
   width: 80%;
   padding: 10px;
-  font-size:20px;
 }
 
 #page-wrapper .header-title > p {
