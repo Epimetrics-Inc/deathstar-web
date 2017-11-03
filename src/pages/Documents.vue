@@ -97,8 +97,11 @@
                         <button class="btn btn-default selector-button" id="selectAll" type="button" v-on:click="selectAllDocs()">
                             Select all
                         </button>
-                        <button class="btn btn-default selector-button" id="deselectall" href="#" type="button" v-on:click="deselectAllDocs()">
+                        <button class="btn btn-default selector-button" id="deselectall" type="button" v-on:click="deselectAllDocs()">
                             Deselect all
+                        </button>
+                        <button class="btn btn-default selector-button"  :disabled="checkedDocs.length === 0" href="#" type="button">
+                            Download selected
                         </button>
                     </div>
                     <ul class="nav document-list" id="side-menu">

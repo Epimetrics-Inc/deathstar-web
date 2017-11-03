@@ -12,7 +12,7 @@
                 <!--Second column-->
                 <div class="col-sm-6 pull-right">
                     <div class="footer-links pull-right">
-                      <a>How to generate visualization</a>
+                      <router-link :to="{ name: 'visualization' }">How to generate visualization</router-link>
                       <router-link :to="{ name: 'about' }">About</router-link>
                     </div>
                 </div>
