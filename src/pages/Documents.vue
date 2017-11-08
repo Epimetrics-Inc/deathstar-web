@@ -221,7 +221,7 @@ export default {
     /*
     * Init document list and vue data values
     */
-    initDocoments: function () {
+    initDocuments: function () {
       this.isLoading = true
       let query = {}
       // init vue data values according to query
@@ -272,10 +272,10 @@ export default {
         }
 
         if (this.$route.query.page) {
-          this.currentPage = this.$route.query.page
-          query.page = this.currentPage
+          // did not update this.currentpage due to pagination rendering issues
+          query.page = parseInt(this.$route.query.page)
         } else {
-          this.currentPage = 1
+          query.page = 1
         }
       }
 
@@ -283,13 +283,16 @@ export default {
       getDocuments(query).then(res => {
         this.documents = res.data.results
         this.totalPage = Math.ceil(parseInt(res.data.count) / this.numDocPerPage)
-        this.isLoading = false
+
+        this.currentPage = query.page  // need to update here so that it's updated with totalpage
 
         if (res.data.count === 0) {
           this.errorMessage = 'No results found'
         } else {
           this.errorMessage = false
         }
+
+        this.isLoading = false
       }).catch(error => {
         console.log(error)
         this.errorMessage = 'There was an error communicating with the server. Please refresh the page.'
@@ -360,13 +363,13 @@ export default {
         this.validateDate('dateTo')
       }
     },
-    '$route': 'initDocoments'
+    '$route': 'initDocuments'
   },
   mounted: function () {
     for (let filter of this.filters) { // initialize to check all filters
       this.checkedFilters.push(filter)
     }
-    this.initDocoments()
+    this.initDocuments()
   }
 }
 </script>
