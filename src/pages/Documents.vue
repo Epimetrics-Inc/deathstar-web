@@ -105,17 +105,17 @@
                         </button>
                     </div>
                     <ul class="nav document-list" id="side-menu">
-                        <li v-for="ao in documents" :key="ao.pk">
-                            <div class="ao-link" v-on:click="clickDocument(ao.pk)">
+                        <li v-for="ao in documents" :key="ao.id">
+                            <div class="ao-link" v-on:click="clickDocument(ao.id)">
                                 <div class="list-checkbox">
-                                    <input v-bind:value="ao.pk" type="checkbox" v-on:click.stop v-model="checkedDocs">
+                                    <input v-bind:value="ao.id" type="checkbox" v-on:click.stop v-model="checkedDocs">
                                 </div>
                                 <div class="ao-details">
                                     <div class="pull-right text-right">
                                         {{ ao.date | longdate}}
 
                                         <div class="hidden-button">
-                                            <router-link class="btn btn-default" target="_blank" v-bind:to="{ name:'document', params: { id: ao.pk } }" v-on:click.native.stop>
+                                            <router-link class="btn btn-default" target="_blank" v-bind:to="{ name:'document', params: { id: ao.id } }" v-on:click.native.stop>
                                                 <icon name="external-link"></icon>
                                             </router-link> 
                                         </div>
@@ -232,70 +232,76 @@ export default {
     */
     initDocuments: function () {
       this.isLoading = true
-      let query = {}
+      let query = ''
+      let currPageTemp = 1
       // init vue data values according to query
       if (this.$route.hasOwnProperty('query') && !this.isOldRouteQuery) {
         // sets isOldRouteQuery back to false because it was set in updateResults to true
         this.isOldRouteQuery = false
 
-        if (this.$route.query.dateFrom) {  // setting of date
+        if (this.$route.query.dateFrom) {
           this.dateFrom = this.$route.query.dateFrom
-
-          if (this.$route.query.dateTo) {                   // has datefrom, has dateto
-            this.dateTo = this.$route.query.dateTo
-            query.date__range = this.dateFrom + ',' + this.dateTo
-          } else {                                          // has datefrom, no dateto
-            this.dateTo = ''
-            query.date__range = this.dateFrom + ',2100-01-01'
-          }
+          query += 'date=gte.' + this.dateFrom + '&'
         } else {
           this.dateFrom = ''
+        }
 
-          if (this.$route.query.dateTo) {                   // no datefrom, has dateto
-            this.dateTo = this.$route.query.dateTo
-            query.date__range = '1900-01-01,' + this.dateTo
-          } else {                                          // no datefrom, no dateto
-            this.dateTo = ''
-          }
+        if (this.$route.query.dateTo) {
+          this.dateTo = this.$route.query.dateTo
+          query += 'date=lte.' + this.dateTo + '&'
+        } else {
+          this.dateTo = ''
         }
 
         if (this.$route.query.signedBy) {
           this.signedBy = this.$route.query.signedBy
-          query.sign__icontains = this.signedBy
+          query += 'sign=ilike.*' + this.signedBy + '*&'
         } else {
           this.signedBy = ''
         }
 
         if (this.$route.query.ordering) {
           this.sortBy = this.$route.query.ordering
-          query.ordering = this.sortBy
+
+          switch (this.sortBy) {
+            case 'date': // oldest
+              query += 'order=date.asc' + '&'
+              break
+            case '-date': // newest
+              query += 'order=date.desc' + '&'
+              break
+          }
         } else {
           this.sortBy = ''
         }
 
-        if (this.$route.query.search) {
-          this.searchString = this.$route.query.search
-          query.search = this.searchString
-        } else {
-          this.searchString = ''
-        }
+        // if (this.$route.query.search) {
+        //   this.searchString = this.$route.query.search
+        //   query.search = this.searchString
+        // } else {
+        //   this.searchString = ''
+        // }
 
         if (this.$route.query.page) {
           // did not update this.currentpage due to pagination rendering issues
-          query.page = parseInt(this.$route.query.page)
+          currPageTemp = parseInt(this.$route.query.page)
+
+          query += 'offset=' + ((currPageTemp - 1) * 10) + '&'
         } else {
-          query.page = 1
+          currPageTemp = 1
         }
       }
-
       // init documents according to query
       getDocuments(query).then(res => {
-        this.documents = res.data.results
-        this.totalPage = Math.ceil(parseInt(res.data.count) / this.numDocPerPage)
+        let contentRange = res.headers['content-range']
+        let totalCount = parseInt(contentRange.substring(contentRange.indexOf('/') + 1))
 
-        this.currentPage = query.page  // need to update here so that it's updated with totalpage
+        this.documents = res.data
+        this.totalPage = Math.ceil(totalCount / this.numDocPerPage)
 
-        if (res.data.count === 0) {
+        this.currentPage = currPageTemp // need to update here so that it's updated with totalpage
+
+        if (totalCount === 0) {
           this.errorMessage = 'No results found'
         } else {
           this.errorMessage = false
@@ -345,7 +351,7 @@ export default {
       // TODO: dapat lahat ng docs hindi yung binalik lang
       this.checkedDocs = []
       for (let doc of this.documents) {
-        this.checkedDocs.push(doc.pk)
+        this.checkedDocs.push(doc.id)
       }
     },
     /*

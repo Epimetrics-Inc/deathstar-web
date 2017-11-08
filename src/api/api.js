@@ -1,14 +1,13 @@
 import axios from '@/plugins/axios.js'
 
 export function getDocuments (docquery) {
-  var queryString = ''
-
-  for (let key in docquery) {
-    queryString += key + '=' + docquery[key] + '&'
-  }
-  return axios.get('documents/?' + queryString)
+  return axios.get('document?select=id,title,date,subject,sign,doctype,docnum,created,label(*),modified&limit=10&' + docquery, {
+    headers: {
+      'Prefer': 'count=exact'
+    }
+  })
 }
 
 export function getDocument (docPK) {
-  return axios.get('documents/' + docPK + '/')
+  return axios.get('document?id=eq.' + docPK)
 }

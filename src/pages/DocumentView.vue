@@ -47,7 +47,7 @@
                   <br>
 
                   <div class="doc-subject">
-                      {{ doc.raw_body.subject.text}}
+                      {{ doc.subject}}
                   </div>
 
                   <div class="doc-body" v-html="doc.body">
@@ -130,22 +130,27 @@ export default {
     fetchDocument: function () {
       let document = this.$route.params.id
       getDocument(document).then(res => {
-        this.doc = res.data
-        this.annex = ''
+        if (res.data.hasOwnProperty('0')) {
+          this.doc = res.data['0']
+          this.annex = ''
 
-        if (this.doc.raw_body.image.hasOwnProperty('0')) {
-          let length = Object.keys(this.doc.raw_body.image).length
-          let images = this.doc.raw_body.image
+          if (this.doc.raw_body.image.hasOwnProperty('0')) {
+            let length = Object.keys(this.doc.raw_body.image).length
+            let images = this.doc.raw_body.image
 
-          for (let i = 0; i < length; i++) {
-            let imagesrc = getImageResource(this.doc.title, images[i].text)
+            for (let i = 0; i < length; i++) {
+              let imagesrc = getImageResource(this.doc.title, images[i].text)
 
-            if (images[i].line_num > this.doc.raw_body.signtitle.line_num) { // need to access it as a string
-              this.annex += "<img class='doc-image' src='" + imagesrc + "'>"
-            } else {
-              this.doc.body = this.insert_image(this.doc.body, parseInt(this.doc.raw_body.body.line_num), parseInt(images[i].line_num), "<img src='" + imagesrc + "'>")
+              if (images[i].line_num > this.doc.raw_body.signtitle.line_num) { // need to access it as a string
+                this.annex += "<img class='doc-image' src='" + imagesrc + "'>"
+              } else {
+                this.doc.body = this.insert_image(this.doc.body, parseInt(this.doc.raw_body.body.line_num), parseInt(images[i].line_num), "<img src='" + imagesrc + "'>")
+              }
             }
           }
+        } else {
+          this.errorMessage = 'Document does not exist'
+          this.doc = false
         }
       }).catch(error => {
         this.errorMessage = 'There was an error communicating with the server. Please refresh the page.'
