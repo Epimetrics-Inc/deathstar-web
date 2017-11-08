@@ -31,6 +31,12 @@ button {
 }
 
 /* End of General components*/
+
+.fa-icon {
+  height: 100%;
+  vertical-align: middle;
+}
+
 #wrapper {
   width: 100%;
   flex: 1 0 auto;
@@ -84,7 +90,6 @@ button {
 }
 
 .overlay .fa-icon {
-  height: 100%;
   width: 200px;
 }
 

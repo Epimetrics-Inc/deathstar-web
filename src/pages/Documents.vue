@@ -106,26 +106,34 @@
                     </div>
                     <ul class="nav document-list" id="side-menu">
                         <li v-for="ao in documents" :key="ao.pk">
-                            <router-link v-bind:to="{ name:'document', params: { id: ao.pk } }">
+                            <div class="ao-link" v-on:click="clickDocument(ao.pk)">
                                 <div class="list-checkbox">
                                     <input v-bind:value="ao.pk" type="checkbox" v-on:click.stop v-model="checkedDocs">
                                 </div>
                                 <div class="ao-details">
-                                    <div class="pull-right">
-                                        {{ ao.date }}
+                                    <div class="pull-right text-right">
+                                        {{ ao.date | longdate}}
+
+                                        <div class="hidden-button">
+                                            <router-link class="btn btn-default" target="_blank" v-bind:to="{ name:'document', params: { id: ao.pk } }" v-on:click.native.stop>
+                                                <icon name="external-link"></icon>
+                                            </router-link> 
+                                        </div>
                                     </div>
-                                    <div>{{ ao.doctype }} {{ ao.docnum}}</div>
-                                    <div class="small text-success"> 
+                                    <div class="pull-right">
+                                        
+                                    </div>
+                                    <div class="text-primary">{{ ao.doctype }} {{ ao.docnum}}</div>
+                                    <div class="small text-muted"> 
                                         {{ ao.sign }}
                                     </div>
-                                    <div class="text-muted"> 
+                                    <div class="text-success"> 
                                         {{ ao.subject }}
                                     </div>
                                 </div>
-                            </router-link>
+                            </div>
                         </li>
                     </ul>
-
                     <pagination v-model="currentPage" :total-page="totalPage" :max-size="maxSize" :size="'sm'" :boundary-links="true" :direction-links="false" v-on:change="updateCurrentPage"></pagination>
                   </div>
                   <div class="overlay" v-show="isLoading">
@@ -142,6 +150,7 @@
 // icon imports
 import 'vue-awesome/icons/calendar'
 import 'vue-awesome/icons/spinner'
+import 'vue-awesome/icons/external-link'
 
 import icon from 'vue-awesome/components/Icon.vue'
 import collapse from 'uiv/src/components/collapse/Collapse.vue'
@@ -344,6 +353,9 @@ export default {
     */
     deselectAllDocs: function (event) {
       this.checkedDocs = []
+    },
+    clickDocument: function (doc) {
+      this.$router.push({ name: 'document', params: { id: doc } })
     }
   },
   watch: {
@@ -432,15 +444,33 @@ export default {
   margin: 15px auto;
 }
 
-.document-list .ao-details{
+.hidden-button {
+  visibility: hidden;
+}
+
+.document-list .ao-details {
   width: 100%;
 }
 
-.document-list li > a {
+.document-list .ao-link {
+  cursor: pointer;
+  padding: 10px 15px
+}
+
+.document-list .ao-link:hover{
+  background-color: #eee;
+}
+
+.document-list .ao-link:hover .hidden-button {
+  visibility: visible;
+}
+
+
+.document-list li > div {
   display: flex;
 }
 
-.document-list li > a > .list-checkbox {
+.document-list li > div > .list-checkbox {
   margin-top: -2px;
   margin-right: 10px;
 }
@@ -448,4 +478,5 @@ export default {
 #export-options {
   margin-bottom: 15px;
 }
+
 </style>

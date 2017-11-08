@@ -31,7 +31,7 @@
                   <br>
 
                   <div class="doc-date pull-right">
-                      {{ doc.date }}
+                      {{ doc.date | longdate }}
                   </div>
 
                   <br>
