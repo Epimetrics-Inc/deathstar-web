@@ -275,12 +275,11 @@ export default {
           this.sortBy = ''
         }
 
-        // if (this.$route.query.search) {
-        //   this.searchString = this.$route.query.search
-        //   query.search = this.searchString
-        // } else {
-        //   this.searchString = ''
-        // }
+        if (this.$route.query.search) {
+          this.searchString = this.$route.query.search
+        } else {
+          this.searchString = ''
+        }
 
         if (this.$route.query.page) {
           // did not update this.currentpage due to pagination rendering issues
@@ -291,8 +290,10 @@ export default {
           currPageTemp = 1
         }
       }
+
       // init documents according to query
-      getDocuments(query).then(res => {
+      getDocuments(this.searchString, query).then(res => {
+        console.log(res)
         let contentRange = res.headers['content-range']
         let totalCount = parseInt(contentRange.substring(contentRange.indexOf('/') + 1))
 
