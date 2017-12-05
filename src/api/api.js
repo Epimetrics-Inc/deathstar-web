@@ -18,6 +18,15 @@ export function getDocuments (searchString, docquery) {
   }
 }
 
+export function getAllDocumentsID (searchString, docquery) {
+  if (searchString) {
+    return axios.get('document?select=id&or=(docnum.@@.{' +
+      searchString + '},body.@@.{' + searchString + '})' + docquery)
+  } else {
+    return axios.get('document?select=id&' + docquery)
+  }
+}
+
 export function getDocument (docPK) {
   return axios.get('document?id=eq.' + docPK)
 }

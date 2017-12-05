@@ -48,6 +48,7 @@
 
                   <div class="doc-subject">
                       {{ doc.subject}}
+                      <br>
                   </div>
 
                   <div class="doc-body" v-html="doc.body">

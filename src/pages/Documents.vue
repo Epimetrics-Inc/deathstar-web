@@ -159,7 +159,7 @@ import pagination from 'uiv/src/components/pagination/Pagination.vue'
 
 import datePicker from '@/components/datepicker/DatePicker.vue'
 
-import { getDocuments } from '@/api/api'
+import { getDocuments, getAllDocumentsID } from '@/api/api'
 
 export default {
   components: {
@@ -231,7 +231,46 @@ export default {
     * Init document list and vue data values
     */
     initDocuments: function () {
+      let query = this.getQuery().query
+      let currPageTemp = 1
+
+      if (this.$route.query.page) {
+        // did not update this.currentpage due to pagination rendering issues
+        currPageTemp = parseInt(this.$route.query.page)
+
+        query += 'offset=' + ((currPageTemp - 1) * 10) + '&'
+      } else {
+        currPageTemp = 1
+      }
+
       this.isLoading = true
+
+      // init documents according to query
+      getDocuments(this.searchString, query).then(res => {
+        console.log(res)
+        let contentRange = res.headers['content-range']
+        let totalCount = parseInt(contentRange.substring(contentRange.indexOf('/') + 1))
+
+        this.documents = res.data
+        this.totalPage = Math.ceil(totalCount / this.numDocPerPage)
+
+        this.currentPage = currPageTemp // need to update here so that it's updated with totalpage
+
+        if (totalCount === 0) {
+          this.errorMessage = 'No results found'
+        } else {
+          this.errorMessage = false
+        }
+
+        this.isLoading = false
+      }).catch(error => {
+        console.log(error)
+        this.errorMessage = 'There was an error communicating with the server. Please refresh the page.'
+        this.isLoading = false
+      })
+    },
+
+    getQuery: function () {
       let query = ''
       let currPageTemp = 1
       // init vue data values according to query
@@ -280,40 +319,9 @@ export default {
         } else {
           this.searchString = ''
         }
-
-        if (this.$route.query.page) {
-          // did not update this.currentpage due to pagination rendering issues
-          currPageTemp = parseInt(this.$route.query.page)
-
-          query += 'offset=' + ((currPageTemp - 1) * 10) + '&'
-        } else {
-          currPageTemp = 1
-        }
       }
 
-      // init documents according to query
-      getDocuments(this.searchString, query).then(res => {
-        console.log(res)
-        let contentRange = res.headers['content-range']
-        let totalCount = parseInt(contentRange.substring(contentRange.indexOf('/') + 1))
-
-        this.documents = res.data
-        this.totalPage = Math.ceil(totalCount / this.numDocPerPage)
-
-        this.currentPage = currPageTemp // need to update here so that it's updated with totalpage
-
-        if (totalCount === 0) {
-          this.errorMessage = 'No results found'
-        } else {
-          this.errorMessage = false
-        }
-
-        this.isLoading = false
-      }).catch(error => {
-        console.log(error)
-        this.errorMessage = 'There was an error communicating with the server. Please refresh the page.'
-        this.isLoading = false
-      })
+      return {query: query, currPage: currPageTemp}
     },
     /*
     * called when update results button is called
@@ -349,11 +357,18 @@ export default {
     * Select all documents
     */
     selectAllDocs: function (event) {
-      // TODO: dapat lahat ng docs hindi yung binalik lang
-      this.checkedDocs = []
-      for (let doc of this.documents) {
-        this.checkedDocs.push(doc.id)
-      }
+      let query = this.getQuery().query
+
+      this.isLoading = true
+
+      getAllDocumentsID(this.searchString, query).then(res => {
+        this.checkedDocs = res.data.map(doc => doc.id)
+        this.isLoading = false
+      }).catch(error => {
+        console.log(error)
+        this.errorMessage = 'There was an error communicating with the server. Please refresh the page.'
+        this.isLoading = false
+      })
     },
     /*
     * Deselect or clear all documents in checkedDocs
