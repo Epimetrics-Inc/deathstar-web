@@ -27,8 +27,8 @@
                   </a>
               </li>
           </ul>
-          <form class="navbar-form navbar-right" role="search" v-on:submit.prevent="searchDocuments()">
-              <div class="input-group">
+          <form class="navbar-form" role="search" v-on:submit.prevent="searchDocuments()">
+              <div class="input-group col-md-6">
                   <input type="text" class="form-control" placeholder="Search..." v-model.lazy="searchString">
                   <span class="input-group-btn">
                   <button class="btn btn-default" type="submit">
