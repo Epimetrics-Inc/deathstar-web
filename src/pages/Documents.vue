@@ -6,16 +6,6 @@
                   <collapse class="navbar-collapse" v-model="sidebarCollapse">
                     <div id="filter-menu">
                         <div class="filter-header">
-                          Themes
-                        </div>
-                        <div id="filter-themes">
-                            <label class="checkbox" v-for="filter in filters">
-                                <input type="checkbox" v-bind:value="filter" v-model="checkedFilters">
-                                {{ filter }}
-                            </label>
-                        </div>
-                        <hr>
-                        <div class="filter-header">
                           Sort By
                         </div>
                         <div id="filter-sort">
@@ -174,17 +164,10 @@ export default {
     return {
       documents: [],
       checkedDocs: [],
-      filters: [
-        'Adolescent Health',
-        'Geriatric Health',
-        'MNCHN',
-        'Special Population'
-      ],
       searchString: '',
       dateFrom: '',
       dateTo: '',
       signedBy: '',
-      checkedFilters: [],
       sortBy: 'date',
       currentPage: 1, // used for pagination
       maxSize: 8, // max number of pages in pagination component
@@ -400,9 +383,6 @@ export default {
     '$route': 'initDocuments'
   },
   mounted: function () {
-    for (let filter of this.filters) { // initialize to check all filters
-      this.checkedFilters.push(filter)
-    }
     this.initDocuments()
   }
 }
