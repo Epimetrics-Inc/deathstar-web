@@ -22,6 +22,9 @@ export default {
     return {
       sidebarCollapse: true
     }
+  },
+  mounted: function () {
+    this.$store.dispatch('initSignList')
   }
 }
 </script>

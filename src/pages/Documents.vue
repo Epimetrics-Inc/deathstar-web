@@ -65,10 +65,10 @@
                         </div>
                         <hr>
                         <div class="filter-header">
-                            Signed by
+                            DOH Secretary
                         </div>
                         <div id="filter-signed">
-                            <input class="form-control" type="text" v-model="signedBy">
+                            <v-select v-model="signedBy" :options="this.$store.state.signList"></v-select>
                         </div>
                         <hr>   
                         <button type="button" class="btn btn-default" v-on:click="updateFilters()">Update Results</button>
@@ -147,6 +147,8 @@ import collapse from 'uiv/src/components/collapse/Collapse.vue'
 import dropdown from 'uiv/src/components/dropdown/Dropdown.vue'
 import pagination from 'uiv/src/components/pagination/Pagination.vue'
 
+import vSelect from 'vue-select'
+
 import datePicker from '@/components/datepicker/DatePicker.vue'
 
 import { getDocuments, getAllDocumentsID } from '@/api/api'
@@ -157,7 +159,8 @@ export default {
     icon,
     collapse,
     dropdown,
-    pagination
+    pagination,
+    vSelect
   },
   props: ['sidebarCollapse'],
   data: function () {
@@ -230,7 +233,6 @@ export default {
 
       // init documents according to query
       getDocuments(this.searchString, query).then(res => {
-        console.log(res)
         let contentRange = res.headers['content-range']
         let totalCount = parseInt(contentRange.substring(contentRange.indexOf('/') + 1))
 
@@ -481,4 +483,11 @@ export default {
   margin-bottom: 15px;
 }
 
+#filter-signed ul.dropdown-menu {
+    text-overflow: ellipsis;
+
+  /* Required for text-overflow to do anything */
+  white-space: nowrap;
+  overflow-x: hidden;
+}
 </style>
