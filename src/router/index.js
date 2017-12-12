@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import Landing from '@/pages/Landing'
 import Documents from '@/pages/Documents'
 import DocumentView from '@/pages/DocumentView'
 import About from '@/pages/About'
@@ -13,12 +14,13 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'documents',
-      component: Documents
+      name: 'landing',
+      component: Landing
     },
     {
       path: '/documents',
-      redirect: '/'
+      name: 'documents',
+      component: Documents
     },
     {
       path: '/document/:id',
