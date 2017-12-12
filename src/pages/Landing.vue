@@ -41,7 +41,8 @@ export default {
 .landing-content {
   text-align: center;
   font-size: 8em;
-  margin-top: 80px;
+  margin-top: 100px;
+  color: #777;
 }
 
 .landing-content .input-group {

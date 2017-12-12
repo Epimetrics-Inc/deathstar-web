@@ -65,7 +65,7 @@
                         </div>
                         <hr>
                         <div class="filter-header">
-                            DOH Secretary
+                            Administration
                         </div>
                         <div id="filter-signed">
                             <v-select v-model="signedBy" :options="this.$store.state.signList"></v-select>
