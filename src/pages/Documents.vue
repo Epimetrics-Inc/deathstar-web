@@ -484,8 +484,15 @@ export default {
 }
 
 #filter-signed ul.dropdown-menu {
-    text-overflow: ellipsis;
+  text-overflow: ellipsis;
 
+  /* Required for text-overflow to do anything */
+  white-space: nowrap;
+  overflow-x: hidden;
+}
+
+#filter-signed ul.dropdown-menu *{
+  text-overflow: ellipsis;
   /* Required for text-overflow to do anything */
   white-space: nowrap;
   overflow-x: hidden;
