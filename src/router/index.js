@@ -1,21 +1,36 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Index from '@/pages/index'
-import Visualization from '@/pages/visualization'
-import About from '@/pages/about'
+import Landing from '@/pages/Landing'
+import Documents from '@/pages/Documents'
+import DocumentView from '@/pages/DocumentView'
+import About from '@/pages/About'
+import Visualization from '@/pages/Visualization'
+import ErrorPage from '@/pages/ErrorPage'
 
 Vue.use(Router)
 
 export default new Router({
+  mode: 'history',
   routes: [
     {
       path: '/',
-      name: 'documents',
-      component: Index
+      name: 'landing',
+      component: Landing
     },
     {
       path: '/documents',
-      redirect: '/'
+      name: 'documents',
+      component: Documents
+    },
+    {
+      path: '/document/:id',
+      name: 'document',
+      component: DocumentView
+    },
+    {
+      path: '/about',
+      name: 'about',
+      component: About
     },
     {
       path: '/visualization',
@@ -23,9 +38,8 @@ export default new Router({
       component: Visualization
     },
     {
-      path: '/about',
-      name: 'about',
-      component: About
+      path: '*',
+      component: ErrorPage
     }
   ]
 })

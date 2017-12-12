@@ -3,5 +3,5 @@ var devEnv = require('./dev.env')
 
 module.exports = merge(devEnv, {
   NODE_ENV: '"testing"',
-  SERVER_URL: '"http://localhost:8000/api/"'
+  SERVER_URL: '"https://siklab.io/"'
 })

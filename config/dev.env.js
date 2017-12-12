@@ -3,5 +3,5 @@ var prodEnv = require('./prod.env')
 
 module.exports = merge(prodEnv, {
   NODE_ENV: '"development"',
-  SERVER_URL: '"http://localhost:8000/api/"'
+  SERVER_URL: '"https://siklab.io/"'
 })
