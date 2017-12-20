@@ -52,7 +52,6 @@ export default new Vuex.Store({
         let signList = [...new Set(res.data.map(obj =>
           obj.sign === null ? null : obj.sign
         ))]
-        console.log(signList)
         signList = signList.filter(n => n)
         commit(SIGNLIST, { signList })
       }, (err) => {
