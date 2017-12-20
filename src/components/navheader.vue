@@ -13,7 +13,7 @@
           </div>
           <!-- /.navbar-header -->
           <ul class="nav navbar-nav navbar-right">
-              <li>
+              <li v-if="isLoggedIn">
                   <a href="#">
                       Upload
                   </a>
