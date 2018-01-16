@@ -149,3 +149,11 @@ button {
 .huge {
   font-size: 40px;
 }
+
+/* Start of media print */
+@media print{
+   footer, .preview-buttons{
+       display:none;
+   }
+}
+/* End of media print */
