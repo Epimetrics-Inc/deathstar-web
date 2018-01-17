@@ -3,3 +3,9 @@ export function getImageResource (title, filename) {
 
   return (githuburl + title.substring(0, 4) + '/' + title + '/' + filename)
 }
+
+export function getPdf (doc) { // by PK
+  var githuburl = 'https://raw.githubusercontent.com/hadrianpaulo/project_deathstar/master/ETL/pdfs/'
+
+  return (githuburl + '/' + doc + '.pdf')
+}

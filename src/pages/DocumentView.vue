@@ -88,7 +88,7 @@ import collapse from 'uiv/src/components/collapse/Collapse.vue'
 import icon from 'vue-awesome/components/Icon'
 
 import { getDocument } from '@/api/api'
-import { getImageResource } from '@/api/gitresource'
+import { getImageResource, getPdf } from '@/api/gitresource'
 
 export default {
   components: {
@@ -126,7 +126,8 @@ export default {
       }
     },
     download: function () {
-      alert('download')
+      alert(this.doc.id)
+      window.location.href = getPdf(this.doc.id)
     },
     fetchDocument: function () {
       let document = this.$route.params.id
@@ -255,5 +256,30 @@ export default {
 .preview-buttons a#download-button {
   margin-left:20px;
 }
+
+/* Start of media print */
+@media print {
+  .preview-buttons{
+   display:none;
+  }
+
+  body {
+    margin: 0;
+    min-height:100%;
+  }
+
+  #page-wrapper {
+    padding: 0px;
+  }
+
+  #page-wrapper .doc-preview {
+    padding: 0px;
+  }
+
+  @page {
+    margin: 1in;
+  }
+}
+/* End of media print */
 
 </style>

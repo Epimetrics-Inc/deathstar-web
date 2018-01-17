@@ -151,9 +151,9 @@ button {
 }
 
 /* Start of media print */
-@media print{
-   footer, .preview-buttons{
-       display:none;
-   }
+@media print {
+  footer {
+   display:none;
+  }
 }
 /* End of media print */
