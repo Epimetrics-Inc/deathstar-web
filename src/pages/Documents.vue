@@ -367,44 +367,19 @@ export default {
     /**
     * Download all selected files
     */
-    downloadSelected: function (event) {
-      JSZipUtils.getBinaryContent('../../static/pdfs/1.pdf', function (err, data) {
-        if (err) {
-          throw err // or handle the error
-        } else {
-          var zip = new JSZip()
-          zip.file('1.pdf', data, {binary: true})
+    downloadSelected: async function (event) {
+      var zip = new JSZip()
 
-          JSZipUtils.getBinaryContent('../../static/pdfs/2.pdf', function (err, data) {
-            if (err) {
-              throw err // or handle the error
-            } else {
-              zip.file('2.pdf', data, {binary: true})
+      // loop and get each pdf selected
+      for (let checkedDoc of this.checkedDocs) {
+        let data = JSZipUtils.getBinaryContent('../../static/pdfs/' + checkedDoc + '.pdf')
+        await zip.file(checkedDoc + '.pdf', data, {binary: true})
+      }
 
-              zip.generateAsync({type: 'base64'}).then(function (base64) {
-                location.href = 'data:application/zip;base64,' + base64
-              })
-            }
-          })
-        }
+      // generate zip
+      zip.generateAsync({type: 'base64'}).then(function (base64) {
+        location.href = 'data:application/zip;base64,' + base64
       })
-
-      // var promise = new Promise(function (resolve, reject) {
-      //     request('../../static/1.pdf', function (error, response, body) {
-      //       if (error) {
-      //         reject(error)
-      //       } else {
-      //         resolve(body)
-      //       }
-      //     })
-      // })
-
-      // var zip = new JSZip()
-      // zip.file('1.pdf', promise, {binary: true})
-
-      // zip.generateAsync({type: 'base64'}).then(function (base64) {
-      //   location.href = 'data:application/zip;base64,' + base64
-      // })
     },
 
     clickDocument: function (doc) {
