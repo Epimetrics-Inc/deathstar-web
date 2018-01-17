@@ -68,7 +68,7 @@
                             Administration
                         </div>
                         <div id="filter-signed">
-                            <v-select v-model="signedBy" :options="this.$store.state.signList"></v-select>
+                            <v-select v-model="signedBy" :options="this.$store.state.sign.signList"></v-select>
                         </div>
                         <hr>   
                         <button type="button" class="btn btn-default" v-on:click="updateFilters()">Update Results</button>

@@ -85,10 +85,10 @@ export default {
   },
   computed: {
     isLoggedIn () {
-      return this.$store.state.isLoggedIn
+      return this.$store.state.login.isLoggedIn
     },
     loginStatus () {
-      let loginStatus = this.$store.state.loginStatus
+      let loginStatus = this.$store.state.login.loginStatus
 
       if (loginStatus === 'success') {
         this.isLoginModalOpen = false
