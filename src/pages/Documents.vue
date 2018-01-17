@@ -90,7 +90,7 @@
                         <button class="btn btn-default selector-button" id="deselectall" type="button" v-on:click="deselectAllDocs()">
                             Deselect all
                         </button>
-                        <button class="btn btn-default selector-button"  :disabled="checkedDocs.length === 0" href="#" type="button">
+                        <button class="btn btn-default selector-button"  :disabled="checkedDocs.length === 0" v-on:click="downloadSelected()" type="button">
                             Download selected
                         </button>
                     </div>
@@ -148,6 +148,9 @@ import dropdown from 'uiv/src/components/dropdown/Dropdown.vue'
 import pagination from 'uiv/src/components/pagination/Pagination.vue'
 
 import vSelect from 'vue-select'
+
+import JSZip from 'jszip'
+import JSZipUtils from 'jszip-utils'
 
 import datePicker from '@/components/datepicker/DatePicker.vue'
 
@@ -361,6 +364,49 @@ export default {
     deselectAllDocs: function (event) {
       this.checkedDocs = []
     },
+    /**
+    * Download all selected files
+    */
+    downloadSelected: function (event) {
+      JSZipUtils.getBinaryContent('../../static/pdfs/1.pdf', function (err, data) {
+        if (err) {
+          throw err // or handle the error
+        } else {
+          var zip = new JSZip()
+          zip.file('1.pdf', data, {binary: true})
+
+          JSZipUtils.getBinaryContent('../../static/pdfs/2.pdf', function (err, data) {
+            if (err) {
+              throw err // or handle the error
+            } else {
+              zip.file('2.pdf', data, {binary: true})
+
+              zip.generateAsync({type: 'base64'}).then(function (base64) {
+                location.href = 'data:application/zip;base64,' + base64
+              })
+            }
+          })
+        }
+      })
+
+      // var promise = new Promise(function (resolve, reject) {
+      //     request('../../static/1.pdf', function (error, response, body) {
+      //       if (error) {
+      //         reject(error)
+      //       } else {
+      //         resolve(body)
+      //       }
+      //     })
+      // })
+
+      // var zip = new JSZip()
+      // zip.file('1.pdf', promise, {binary: true})
+
+      // zip.generateAsync({type: 'base64'}).then(function (base64) {
+      //   location.href = 'data:application/zip;base64,' + base64
+      // })
+    },
+
     clickDocument: function (doc) {
       this.$router.push({ name: 'document', params: { id: doc } })
     }
