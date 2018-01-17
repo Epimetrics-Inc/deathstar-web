@@ -367,19 +367,33 @@ export default {
     /**
     * Download all selected files
     */
-    downloadSelected: async function (event) {
+    downloadSelected: function (event) {
       var zip = new JSZip()
+      let count = 0
+
+      // adds file to zip
+      var prepZip = (checkedDoc) => {
+        JSZipUtils.getBinaryContent('../../static/pdfs/' + checkedDoc + '.pdf', (err, data) => {
+          if (err) {
+            throw err // or handle the error
+          } else {
+            zip.file(checkedDoc + '.pdf', data, {binary: true})
+            count++
+            if (count === this.checkedDocs.length) {
+              console.log(count)
+              zip.generateAsync({type: 'blob'})
+              .then(function (blob) {
+                saveAs(blob, 'hello.zip')
+              })
+            }
+          }
+        })
+      }
 
       // loop and get each pdf selected
       for (let checkedDoc of this.checkedDocs) {
-        let data = JSZipUtils.getBinaryContent('../../static/pdfs/' + checkedDoc + '.pdf')
-        await zip.file(checkedDoc + '.pdf', data, {binary: true})
+        prepZip(checkedDoc)
       }
-
-      // generate zip
-      zip.generateAsync({type: 'base64'}).then(function (base64) {
-        location.href = 'data:application/zip;base64,' + base64
-      })
     },
 
     clickDocument: function (doc) {
