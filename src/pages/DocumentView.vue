@@ -3,6 +3,10 @@
         <div class="alert alert-danger error" v-if="errorMessage">
             {{ errorMessage }}
         </div>
+        
+        <div class="hidden" id="doctitle">
+          doc.title
+        </div>
 
         <!-- Page Content -->
         <div id="page-wrapper">
