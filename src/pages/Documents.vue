@@ -151,6 +151,7 @@ import vSelect from 'vue-select'
 
 import JSZip from 'jszip'
 import JSZipUtils from 'jszip-utils'
+import StreamSaver from 'streamsaver'
 
 import datePicker from '@/components/datepicker/DatePicker.vue'
 
@@ -380,11 +381,20 @@ export default {
             zip.file(checkedDoc + '.pdf', data, {binary: true})
             count++
             if (count === this.checkedDocs.length) {
-              console.log(count)
-              zip.generateAsync({type: 'blob'})
-              .then(function (blob) {
-                saveAs(blob, 'hello.zip')
+              var writeStream = StreamSaver.createWriteStream('output.zip').getWriter()
+
+              zip
+              .generateInternalStream({type: 'uint8array'})
+              .on('data', function (data, metadata) {
+                writeStream.write(data)
               })
+              .on('error', function (e) {
+                writeStream.abort(e)
+              })
+              .on('end', function () {
+                writeStream.close()
+              })
+              .resume()
             }
           }
         })
