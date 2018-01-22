@@ -18,7 +18,7 @@
                   <a id="zoom-in-button" v-on:click="zoomIn()">
                       <icon name="search-plus"></icon>
                   </a>
-                  <a id="download-button" v-on:click="download()">
+                  <a id="download-button" :href="download()" download>
                       <icon name="download"></icon>
                   </a>
               </div>
@@ -91,8 +91,7 @@ import 'vue-awesome/icons/download'
 import collapse from 'uiv/src/components/collapse/Collapse.vue'
 import icon from 'vue-awesome/components/Icon'
 
-import { getDocument } from '@/api/api'
-import { getImageResource, getPdf } from '@/api/gitresource'
+import { getDocument, getPdf, getImageResource } from '@/api/api'
 
 export default {
   components: {
@@ -130,8 +129,7 @@ export default {
       }
     },
     download: function () {
-      alert(this.doc.id)
-      window.location.href = getPdf(this.doc.id)
+      return getPdf(this.doc.id)
     },
     fetchDocument: function () {
       let document = this.$route.params.id
