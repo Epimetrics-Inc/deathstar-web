@@ -150,6 +150,19 @@ button {
   font-size: 40px;
 }
 
+.v-select button.clear {
+  display: none
+}
+
+.v-select input.form-control {
+  width: 0!important;
+}
+
+.v-select.open input.form-control {
+  width: 100%!important;
+}
+
+
 /* Start of media print */
 @media print {
   footer {
