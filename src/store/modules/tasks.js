@@ -37,9 +37,9 @@ const mutations = {
   }
 }
 const actions = {
-  addTask ({ commit }, task) {
-    window.onbeforeunload = function() {
-      return true;
+  addTask ({ commit }, {task, writeStream}) {
+    window.onbeforeunload = () => {
+      return true
     }
     commit(ADDTASK, { task })
   },
