@@ -373,7 +373,8 @@ export default {
       let count = 0
       let task = {
         name: 'Prepping files',
-        progress: 0
+        progress: 0,
+        status: 'pending'
       }
       this.$store.dispatch('addTask', task)
 
@@ -387,7 +388,7 @@ export default {
             count++
             if (count === this.checkedDocs.length) {
               var writeStream = StreamSaver.createWriteStream('output.zip').getWriter()
-              this.$store.dispatch('setTaskName', {task: task, name: 'Zipping ' + count + ' files'})
+              this.$store.dispatch('setTozippingFile', {task: task, count: count})
 
               zip
               .generateInternalStream({type: 'uint8array'})
@@ -398,8 +399,9 @@ export default {
               .on('error', function (e) {
                 writeStream.abort(e)
               })
-              .on('end', function () {
+              .on('end', () => {
                 writeStream.close()
+                  this.$store.dispatch('setToDoneZipping', task)
               })
               .resume()
             }
