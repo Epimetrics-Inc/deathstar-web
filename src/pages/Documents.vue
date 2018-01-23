@@ -388,7 +388,7 @@ export default {
         var zip = new JSZip()
         let count = 0
         let task = {
-          name: 'Prepping files',
+          name: 'Preparing files',
           progress: 0,
           status: 'pending'
         }

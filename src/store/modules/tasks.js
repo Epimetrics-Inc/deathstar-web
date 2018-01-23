@@ -6,19 +6,8 @@ const SETTASKNAME = 'SET_TASK_NAME'
 const SETTASKSTATUSDONE = "SET_TASK_STATUS_DONE"
 
 const state = {
-  taskList: {
-    0 : {
-      progress: 30,
-      name: 'Zipping 32 files',
-      status: 'pending'
-    },
-    1 : {
-      progress: 50,
-      name: 'Zipping 10 files',
-      status: 'pending'
-    },
-  },
-  currIndex: 2
+  taskList: {},
+  currIndex: 0
 }
 
 const mutations = {
@@ -37,7 +26,7 @@ const mutations = {
   }
 }
 const actions = {
-  addTask ({ commit }, {task, writeStream}) {
+  addTask ({ commit }, task) {
     window.onbeforeunload = () => {
       return true
     }
