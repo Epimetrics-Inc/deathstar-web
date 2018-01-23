@@ -64,7 +64,7 @@ const actions = {
       progress: 0,
       status: 'pending',
     }
-    
+
     dispatch('addTask', task)
 
     // adds file to zip
@@ -73,7 +73,6 @@ const actions = {
         if (err) {
           dispatch('setErrorZipping', task)
         } else {
-          var writeStream = StreamSaver.createWriteStream('output.zip').getWriter()
           zip.file(checkedDoc + '.pdf', data, {binary: true})
           count++
 
@@ -81,6 +80,7 @@ const actions = {
           dispatch('setTaskProgress', {task: task, progress: Math.floor(count * 100 / checkedDocs.length / 2)})
 
           if (count === checkedDocs.length) {
+            var writeStream = StreamSaver.createWriteStream('output.zip').getWriter()
             dispatch('setTozippingFile', {task: task, count: count})
 
             zip
