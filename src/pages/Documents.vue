@@ -371,6 +371,11 @@ export default {
     downloadSelected: function (event) {
       var zip = new JSZip()
       let count = 0
+      let task = {
+        name: 'Prepping files',
+        progress: 0
+      }
+      this.$store.dispatch('addTask', task)
 
       // adds file to zip
       var prepZip = (checkedDoc) => {
@@ -382,12 +387,13 @@ export default {
             count++
             if (count === this.checkedDocs.length) {
               var writeStream = StreamSaver.createWriteStream('output.zip').getWriter()
+              this.$store.dispatch('setTaskName', {task: task, name: 'Zipping ' + count + ' files'})
 
               zip
               .generateInternalStream({type: 'uint8array'})
-              .on('data', function (data, metadata) {
-                console.log("progression: " + metadata.percent.toFixed(2) + " %");
+              .on('data', (data, metadata) => {
                 writeStream.write(data)
+                this.$store.dispatch('setTaskProgress', {task: task, progress: Math.floor(metadata.percent)})
               })
               .on('error', function (e) {
                 writeStream.abort(e)
