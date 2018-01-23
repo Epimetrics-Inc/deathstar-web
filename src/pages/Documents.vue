@@ -388,7 +388,7 @@ export default {
             count++
 
             // *100 because percentage, / 2 because maximum of 50%
-						this.$store.dispatch('setTaskProgress', {task: task, progress: count * 100 / this.checkedDocs.length / 2})
+						this.$store.dispatch('setTaskProgress', {task: task, progress: Math.floor(count * 100 / this.checkedDocs.length / 2)})
 
             if (count === this.checkedDocs.length) {
               var writeStream = StreamSaver.createWriteStream('output.zip').getWriter()
