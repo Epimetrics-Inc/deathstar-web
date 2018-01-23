@@ -12,9 +12,31 @@
               <router-link class="navbar-brand" to="/">Holocron</router-link>
           </div>
           <!-- /.navbar-header -->
-          <ul class="nav navbar-nav navbar-right">
+          <ul class="nav navbar-top-links navbar-right">
+              <li>
+                  <dropdown ref="dropdown">
+                      <a>
+                          <icon name="download"></icon>
+                      </a>
+                      <template slot="dropdown">
+                          <li>
+                            <div>
+                                <p>
+                                    <strong>Task 1</strong>
+                                    <span class="pull-right text-muted">40% Complete</span>
+                                </p>
+                                <div class="progress progress-striped active">
+                                    <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 30%">
+                                        <span class="sr-only">40% Complete (success)</span>
+                                    </div>
+                                </div>
+                            </div>
+                          </li>
+                      </template>
+                  </dropdown>
+              </li>
               <li v-if="isLoggedIn">
-                  <a href="#">
+                  <a>
                       Upload
                   </a>
               </li>
@@ -63,14 +85,17 @@
 <script>
 import 'vue-awesome/icons/search'
 import 'vue-awesome/icons/spinner'
+import 'vue-awesome/icons/download'
 
 import icon from 'vue-awesome/components/Icon.vue'
 import modal from 'uiv/src/components/modal/Modal.vue'
+import dropdown from 'uiv/src/components/dropdown/Dropdown.vue'
 
 export default {
   components: {
     icon,
-    modal
+    modal,
+    dropdown,
   },
   props: ['activePage'],
   data: function () {

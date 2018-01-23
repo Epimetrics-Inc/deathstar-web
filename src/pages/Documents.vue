@@ -386,6 +386,7 @@ export default {
               zip
               .generateInternalStream({type: 'uint8array'})
               .on('data', function (data, metadata) {
+                console.log("progression: " + metadata.percent.toFixed(2) + " %");
                 writeStream.write(data)
               })
               .on('error', function (e) {
