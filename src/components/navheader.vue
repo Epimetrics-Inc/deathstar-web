@@ -14,20 +14,22 @@
           <!-- /.navbar-header -->
           <ul class="nav navbar-top-links navbar-right">
               <li>
-                  <dropdown ref="dropdown">
+                  <dropdown ref="dropdown" v-if="Object.keys(this.$store.state.tasks.taskList).length > 0">
                       <a>
                           <icon name="download"></icon>
                       </a>
                       <template slot="dropdown">
-                          <li>
+                          <li v-for="t in this.$store.state.tasks.taskList">
                             <div>
                                 <p>
-                                    <strong>Task 1</strong>
-                                    <span class="pull-right text-muted">40% Complete</span>
+                                    <strong>
+                                        {{ t.name }}
+                                    </strong>
+                                    <span class="pull-right text-muted">{{t.progress}}% Complete</span>
                                 </p>
                                 <div class="progress progress-striped active">
-                                    <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 30%">
-                                        <span class="sr-only">40% Complete (success)</span>
+                                    <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" :style="{width: t.progress + '%'}">
+                                        <span class="sr-only">{{t.progress}}% Complete (success)</span>
                                     </div>
                                 </div>
                             </div>
