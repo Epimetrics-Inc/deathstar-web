@@ -25,9 +25,9 @@
                                     <strong>
                                         {{ t.name }}
                                     </strong>
-                                    <span class="pull-right text-muted">{{t.progress}}% Complete</span>
+                                    <span v-if="t.status==='pending'" class="pull-right text-muted">{{t.progress}}% Complete</span>
                                 </p>
-                                <div class="progress progress-striped active">
+                                <div v-if="t.status==='pending'" class="progress progress-striped active">
                                     <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" :style="{width: t.progress + '%'}">
                                         <span class="sr-only">{{t.progress}}% Complete (success)</span>
                                     </div>
