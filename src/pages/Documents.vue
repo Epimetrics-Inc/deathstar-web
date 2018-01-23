@@ -386,6 +386,10 @@ export default {
           } else {
             zip.file(checkedDoc + '.pdf', data, {binary: true})
             count++
+
+            // *100 because percentage, / 2 because maximum of 50%
+						this.$store.dispatch('setTaskProgress', {task: task, progress: count * 100 / this.checkedDocs.length / 2})
+
             if (count === this.checkedDocs.length) {
               var writeStream = StreamSaver.createWriteStream('output.zip').getWriter()
               this.$store.dispatch('setTozippingFile', {task: task, count: count})
@@ -394,7 +398,7 @@ export default {
               .generateInternalStream({type: 'uint8array'})
               .on('data', (data, metadata) => {
                 writeStream.write(data)
-                this.$store.dispatch('setTaskProgress', {task: task, progress: Math.floor(metadata.percent)})
+                this.$store.dispatch('setTaskProgress', {task: task, progress: 50 + Math.floor(metadata.percent / 2)})
               })
               .on('error', function (e) {
                 writeStream.abort(e)
