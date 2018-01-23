@@ -38,6 +38,9 @@ const mutations = {
 }
 const actions = {
   addTask ({ commit }, task) {
+    window.onbeforeunload = function() {
+      return true;
+    }
     commit(ADDTASK, { task })
   },
   setTaskProgress ({ commit }, {task, progress}) {
@@ -51,6 +54,7 @@ const actions = {
     let zipString = 'Complete'
     commit(SETTASKNAME, { task, name: zipString})
     commit(SETTASKSTATUSDONE, {task})
+    window.onbeforeunload = false
   }
 }
 
