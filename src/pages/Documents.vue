@@ -82,6 +82,17 @@
                   <div class="alert alert-danger error" v-if="errorMessage">
                       {{ errorMessage }}
                   </div>
+                  <alert type="warning" v-if="showBrowserWarning" dismissible @dismissed="showBrowserWarning = false">
+                      This browser doesn't support bulk document download. Please use 
+                      <a href="https://www.google.com/chrome/browser/desktop/index.html" target="_blank">
+                        Chrome version 52+
+                      </a>
+                      or 
+                      <a href="http://www.opera.com/download" target="_blank">
+                        Opera version 39+
+                      </a>
+                      , or view and download the documents individually.
+                  </alert>  
                   <div class="search-wrapper" v-if="errorMessage === false">
                     <div id = "export-options">
                         <button class="btn btn-default selector-button" id="selectAll" type="button" v-on:click="selectAllDocs()">
@@ -146,6 +157,7 @@ import icon from 'vue-awesome/components/Icon.vue'
 import collapse from 'uiv/src/components/collapse/Collapse.vue'
 import dropdown from 'uiv/src/components/dropdown/Dropdown.vue'
 import pagination from 'uiv/src/components/pagination/Pagination.vue'
+import alert from 'uiv/src/components/alert/Alert.vue'
 
 import vSelect from 'vue-select'
 
@@ -164,6 +176,7 @@ export default {
     collapse,
     dropdown,
     pagination,
+    alert,
     vSelect
   },
   props: ['sidebarCollapse'],
@@ -182,7 +195,8 @@ export default {
       numDocPerPage: 10, // number of document per page
       isOldRouteQuery: false,
       isLoading: false, // is loading document list
-      errorMessage: false // contains string if there is error, else false
+      errorMessage: false, // contains string if there is error, else false
+      showBrowserWarning: false
     }
   },
   methods: {
@@ -367,55 +381,60 @@ export default {
     },
     /**
     * Download all selected files
+    * Currently available for Chrome 52+ and Opera39+
     */
     downloadSelected: function (event) {
-      var zip = new JSZip()
-      let count = 0
-      let task = {
-        name: 'Prepping files',
-        progress: 0,
-        status: 'pending'
-      }
-      this.$store.dispatch('addTask', task)
+      if (StreamSaver.supported) {
+        var zip = new JSZip()
+        let count = 0
+        let task = {
+          name: 'Prepping files',
+          progress: 0,
+          status: 'pending'
+        }
+        this.$store.dispatch('addTask', task)
 
-      // adds file to zip
-      var prepZip = (checkedDoc) => {
-        JSZipUtils.getBinaryContent('../../static/pdfs/' + checkedDoc + '.pdf', (err, data) => {
-          if (err) {
-            throw err // or handle the error
-          } else {
-            zip.file(checkedDoc + '.pdf', data, {binary: true})
-            count++
+        // adds file to zip
+        var prepZip = (checkedDoc) => {
+          JSZipUtils.getBinaryContent('../../static/pdfs/' + checkedDoc + '.pdf', (err, data) => {
+            if (err) {
+              throw err // or handle the error
+            } else {
+              zip.file(checkedDoc + '.pdf', data, {binary: true})
+              count++
 
-            // *100 because percentage, / 2 because maximum of 50%
-						this.$store.dispatch('setTaskProgress', {task: task, progress: Math.floor(count * 100 / this.checkedDocs.length / 2)})
+              // *100 because percentage, / 2 because maximum of 50%
+              this.$store.dispatch('setTaskProgress', {task: task, progress: Math.floor(count * 100 / this.checkedDocs.length / 2)})
 
-            if (count === this.checkedDocs.length) {
-              var writeStream = StreamSaver.createWriteStream('output.zip').getWriter()
-              this.$store.dispatch('setTozippingFile', {task: task, count: count})
+              if (count === this.checkedDocs.length) {
+                var writeStream = StreamSaver.createWriteStream('output.zip').getWriter()
+                this.$store.dispatch('setTozippingFile', {task: task, count: count})
 
-              zip
-              .generateInternalStream({type: 'uint8array'})
-              .on('data', (data, metadata) => {
-                writeStream.write(data)
-                this.$store.dispatch('setTaskProgress', {task: task, progress: 50 + Math.floor(metadata.percent / 2)})
-              })
-              .on('error', function (e) {
-                writeStream.abort(e)
-              })
-              .on('end', () => {
-                writeStream.close()
-                  this.$store.dispatch('setToDoneZipping', task)
-              })
-              .resume()
+                zip
+                .generateInternalStream({type: 'uint8array'})
+                .on('data', (data, metadata) => {
+                  writeStream.write(data)
+                  this.$store.dispatch('setTaskProgress', {task: task, progress: 50 + Math.floor(metadata.percent / 2)})
+                })
+                .on('error', function (e) {
+                  writeStream.abort(e)
+                })
+                .on('end', () => {
+                  writeStream.close()
+                    this.$store.dispatch('setToDoneZipping', task)
+                })
+                .resume()
+              }
             }
-          }
-        })
-      }
+          })
+        }
 
-      // loop and get each pdf selected
-      for (let checkedDoc of this.checkedDocs) {
-        prepZip(checkedDoc)
+        // loop and get each pdf selected
+        for (let checkedDoc of this.checkedDocs) {
+          prepZip(checkedDoc)
+        }
+      } else {
+        this.showBrowserWarning = true
       }
     },
 
