@@ -68,7 +68,7 @@
                             Administration
                         </div>
                         <div id="filter-signed">
-                            <v-select v-model="signedBy" :options="this.$store.state.signList"></v-select>
+                            <v-select v-model="signedBy" :options="this.$store.state.sign.signList"></v-select>
                         </div>
                         <hr>   
                         <button type="button" class="btn btn-default" v-on:click="updateFilters()">Update Results</button>
@@ -82,6 +82,17 @@
                   <div class="alert alert-danger error" v-if="errorMessage">
                       {{ errorMessage }}
                   </div>
+                  <alert type="warning" v-if="showBrowserWarning" dismissible @dismissed="showBrowserWarning = false">
+                      This browser doesn't support bulk document download. Please use 
+                      <a href="https://www.google.com/chrome/browser/desktop/index.html" target="_blank">
+                        Chrome version 52+
+                      </a>
+                      or 
+                      <a href="http://www.opera.com/download" target="_blank">
+                        Opera version 39+
+                      </a>
+                      , or view and download the documents individually.
+                  </alert>  
                   <div class="search-wrapper" v-if="errorMessage === false">
                     <div id = "export-options">
                         <button class="btn btn-default selector-button" id="selectAll" type="button" v-on:click="selectAllDocs()">
@@ -90,7 +101,7 @@
                         <button class="btn btn-default selector-button" id="deselectall" type="button" v-on:click="deselectAllDocs()">
                             Deselect all
                         </button>
-                        <button class="btn btn-default selector-button"  :disabled="checkedDocs.length === 0" href="#" type="button">
+                        <button class="btn btn-default selector-button"  :disabled="checkedDocs.length === 0" v-on:click="downloadSelected()" type="button">
                             Download selected
                         </button>
                     </div>
@@ -146,8 +157,11 @@ import icon from 'vue-awesome/components/Icon.vue'
 import collapse from 'uiv/src/components/collapse/Collapse.vue'
 import dropdown from 'uiv/src/components/dropdown/Dropdown.vue'
 import pagination from 'uiv/src/components/pagination/Pagination.vue'
+import alert from 'uiv/src/components/alert/Alert.vue'
 
 import vSelect from 'vue-select'
+
+import StreamSaver from 'streamsaver'
 
 import datePicker from '@/components/datepicker/DatePicker.vue'
 
@@ -160,6 +174,7 @@ export default {
     collapse,
     dropdown,
     pagination,
+    alert,
     vSelect
   },
   props: ['sidebarCollapse'],
@@ -178,7 +193,8 @@ export default {
       numDocPerPage: 10, // number of document per page
       isOldRouteQuery: false,
       isLoading: false, // is loading document list
-      errorMessage: false // contains string if there is error, else false
+      errorMessage: false, // contains string if there is error, else false
+      showBrowserWarning: false
     }
   },
   methods: {
@@ -361,6 +377,18 @@ export default {
     deselectAllDocs: function (event) {
       this.checkedDocs = []
     },
+    /**
+    * Download all selected files
+    * Currently available for Chrome 52+ and Opera39+
+    */
+    downloadSelected: function (event) {
+      if (StreamSaver.supported) {
+        this.$store.dispatch('startDownload', this.checkedDocs)
+      } else {
+        this.showBrowserWarning = true
+      }
+    },
+
     clickDocument: function (doc) {
       this.$router.push({ name: 'document', params: { id: doc } })
     }

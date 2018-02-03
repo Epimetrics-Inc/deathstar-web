@@ -12,9 +12,33 @@
               <router-link class="navbar-brand" to="/">Holocron</router-link>
           </div>
           <!-- /.navbar-header -->
-          <ul class="nav navbar-nav navbar-right">
+          <ul class="nav navbar-top-links navbar-right">
+              <li>
+                  <dropdown ref="dropdown" v-if="Object.keys(this.$store.state.tasks.taskList).length > 0">
+                      <a>
+                          <icon name="download"></icon>
+                      </a>
+                      <template slot="dropdown">
+                          <li v-for="t in this.$store.state.tasks.taskList">
+                            <div>
+                                <p>
+                                    <strong>
+                                        {{ t.name }}
+                                    </strong>
+                                    <span v-if="t.status==='pending'" class="pull-right text-muted">{{t.progress}}% Complete</span>
+                                </p>
+                                <div v-if="t.status==='pending'" class="progress progress-striped active">
+                                    <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" :style="{width: t.progress + '%'}">
+                                        <span class="sr-only">{{t.progress}}% Complete (success)</span>
+                                    </div>
+                                </div>
+                            </div>
+                          </li>
+                      </template>
+                  </dropdown>
+              </li>
               <li v-if="isLoggedIn">
-                  <a href="#">
+                  <a>
                       Upload
                   </a>
               </li>
@@ -63,14 +87,17 @@
 <script>
 import 'vue-awesome/icons/search'
 import 'vue-awesome/icons/spinner'
+import 'vue-awesome/icons/download'
 
 import icon from 'vue-awesome/components/Icon.vue'
 import modal from 'uiv/src/components/modal/Modal.vue'
+import dropdown from 'uiv/src/components/dropdown/Dropdown.vue'
 
 export default {
   components: {
     icon,
-    modal
+    modal,
+    dropdown,
   },
   props: ['activePage'],
   data: function () {
@@ -85,10 +112,10 @@ export default {
   },
   computed: {
     isLoggedIn () {
-      return this.$store.state.isLoggedIn
+      return this.$store.state.login.isLoggedIn
     },
     loginStatus () {
-      let loginStatus = this.$store.state.loginStatus
+      let loginStatus = this.$store.state.login.loginStatus
 
       if (loginStatus === 'success') {
         this.isLoginModalOpen = false
