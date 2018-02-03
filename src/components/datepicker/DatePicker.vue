@@ -1,11 +1,14 @@
 <template>
-  <div :style="pickerStyle" @click="onPickerClick">
+  <div :style="pickerStyle" data-role="date-picker" @click="onPickerClick">
     <date-view v-show="view==='d'"
                :month="currentMonth"
                :year="currentYear"
                :date="valueDateObj"
                :today="now"
                :limit="limit"
+               :week-starts-with="weekStartsWith"
+               :icon-control-left="iconControlLeft"
+               :icon-control-right="iconControlRight"
                @month-change="onMonthChange"
                @year-change="onYearChange"
                @date-change="onDateChange"
@@ -14,69 +17,87 @@
     <month-view v-show="view==='m'"
                 :month="currentMonth"
                 :year="currentYear"
+                :icon-control-left="iconControlLeft"
+                :icon-control-right="iconControlRight"
                 @month-change="onMonthChange"
                 @year-change="onYearChange"
                 @view-change="onViewChange">
     </month-view>
     <year-view v-show="view==='y'"
                :year="currentYear"
+               :icon-control-left="iconControlLeft"
+               :icon-control-right="iconControlRight"
                @year-change="onYearChange"
                @view-change="onViewChange">
     </year-view>
     <div v-if="todayBtn||clearBtn">
       <br/>
       <div class="text-center">
-        <button type="button" data-action="select" class="btn btn-info btn-sm" v-if="todayBtn" @click="selectToday">
-          {{t('uiv.datePicker.today')}}
-        </button>
-        <button type="button" data-action="select" class="btn btn-default btn-sm" v-if="clearBtn" @click="clearSelect">
-          {{t('uiv.datePicker.clear')}}
-        </button>
+        <btn data-action="select" type="info" size="sm" v-if="todayBtn" @click="selectToday">{{t('uiv.datePicker.today')}}</btn>
+        <btn data-action="select" size="sm" v-if="clearBtn" @click="clearSelect">{{t('uiv.datePicker.clear')}}</btn>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-  import Locale from '@/../node_modules/uiv/src/mixins/locale'
+  import Locale from '@/../node_modules/uiv/src/mixins/localeMixin'
   import DateView from './DateView.vue'
   import MonthView from './MonthView.vue'
   import YearView from './YearView.vue'
-  import dateUtils from '@/../node_modules/uiv/src/utils/dateUtils'
+  import Btn from '@/../node_modules/uiv/src/components/button/Btn'
+  import {stringify} from '@/../node_modules/uiv/src/utils/dateUtils'
+  import {isNumber} from '@/../node_modules/uiv/src/utils/objectUtils'
 
   export default {
     mixins: [Locale],
-    components: {DateView, MonthView, YearView},
+    components: {DateView, MonthView, YearView, Btn},
     props: {
-      value: {},
+      value: null,
       width: {
-        'default': 270
+        type: Number,
+        default: 270
       },
       todayBtn: {
         type: Boolean,
-        'default': true
+        default: true
       },
       clearBtn: {
         type: Boolean,
-        'default': true
+        default: true
       },
       closeOnSelected: {
         type: Boolean,
-        'default': true
+        default: true
       },
-      limitFrom: {},
-      limitTo: {},
+      limitFrom: null,
+      limitTo: null,
       format: {
         type: String,
-        'default': 'yyyy-MM-dd'
+        default: 'yyyy-MM-dd'
       },
       initialView: {
         type: String,
-        'default': 'd'
+        default: 'd'
       },
       dateParser: {
         type: Function,
-        'default': Date.parse
+        default: Date.parse
+      },
+      weekStartsWith: {
+        type: Number,
+        default: 0,
+        validator (value) {
+          return value >= 0 && value <= 6
+        }
+      },
+      iconControlLeft: {
+        type: String,
+        default: 'glyphicon glyphicon-chevron-left'
+      },
+      iconControlRight: {
+        type: String,
+        default: 'glyphicon glyphicon-chevron-right'
       }
     },
     data () {
@@ -128,14 +149,21 @@
       }
     },
     mounted () {
-      this.currentMonth = this.now.getMonth()
-      this.currentYear = this.now.getFullYear()
-      if (!this.value) {
+      if (this.value) {
+        this.setMonthAndYearByValue(this.value)
+      } else {
+        this.currentMonth = this.now.getMonth()
+        this.currentYear = this.now.getFullYear()
         this.view = this.initialView
       }
     },
     watch: {
       value (val, oldVal) {
+        this.setMonthAndYearByValue(val, oldVal)
+      }
+    },
+    methods: {
+      setMonthAndYearByValue (val, oldVal) {
         let ts = this.dateParser(val)
         if (!isNaN(ts)) {
           let date = new Date(ts)
@@ -149,9 +177,7 @@
             this.currentYear = date.getFullYear()
           }
         }
-      }
-    },
-    methods: {
+      },
       onMonthChange (month) {
         this.currentMonth = month
       },
@@ -160,12 +186,9 @@
         this.currentMonth = undefined
       },
       onDateChange (date) {
-        if (date &&
-          typeof date.date === 'number' &&
-          typeof date.month === 'number' &&
-          typeof date.year === 'number') {
+        if (date && isNumber(date.date) && isNumber(date.month) && isNumber(date.year)) {
           let _date = new Date(date.year, date.month, date.date)
-          this.$emit('input', dateUtils.stringify(_date, this.format))
+          this.$emit('input', stringify(_date, this.format))
         } else {
           this.$emit('input', '')
         }
