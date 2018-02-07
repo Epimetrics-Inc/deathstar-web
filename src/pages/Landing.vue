@@ -39,13 +39,14 @@ export default {
 <style>
 .landing-content {
   text-align: center;
-  font-size: 8em;
+  font-size: 5em;
   margin-top: 100px;
   color: #777;
 }
 
 .landing-content .input-group {
   margin: auto;
+  padding:20px;
 }
 
 </style>
