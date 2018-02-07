@@ -9,7 +9,7 @@
                   <span class="icon-bar"></span>
                   <span class="icon-bar"></span>
               </button>
-              <router-link class="navbar-brand" to="/">Holocron</router-link>
+              <router-link class="navbar-brand" to="/">{{ $store.state.webappName }}</router-link>
           </div>
           <!-- /.navbar-header -->
           <ul class="nav navbar-top-links navbar-right">
