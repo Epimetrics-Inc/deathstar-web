@@ -1,8 +1,7 @@
 <template>
   <div id="wrapper" class="about">
       <div class="landing-content">
-          Holocron
-
+          {{ $store.state.webappName }}
           <form role="search" v-on:submit.prevent="searchDocuments()">
               <div class="input-group col-md-6">
                   <input type="text" class="form-control" placeholder="Search..." v-model.lazy="searchString">
