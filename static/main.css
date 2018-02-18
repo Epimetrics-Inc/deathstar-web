@@ -149,3 +149,59 @@ button {
 .huge {
   font-size: 40px;
 }
+
+.v-select button.clear {
+  display: none
+}
+
+.v-select input.form-control {
+  width: 0!important;
+}
+
+.v-select.open input.form-control {
+  width: 100%!important;
+}
+
+.dropdown-menu > li > div {
+  padding: 15px;
+}
+
+/* Start of Navbar  */
+.nav > li > .dropdown > a {
+  position: relative;
+  display: block;
+  padding: 15px;
+}
+
+.navbar-default .navbar-nav > li .dropdown > a {
+  color: #777;
+}
+
+.navbar-top-links {
+  margin-right: 0;
+}
+.navbar-top-links li {
+  display: inline-block;
+}
+.navbar-top-links li:last-child {
+  margin-right: 15px;
+}
+.navbar-top-links li a {
+  padding: 15px;
+  min-height: 50px;
+  color: #777;
+}
+
+.navbar-top-links .dropdown-menu li {
+  display: block;
+  width: 300px;
+}
+/* End of Navbar  */
+
+/* Start of media print */
+@media print {
+  footer {
+   display:none;
+  }
+}
+/* End of media print */

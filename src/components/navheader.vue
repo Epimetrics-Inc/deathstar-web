@@ -9,22 +9,33 @@
                   <span class="icon-bar"></span>
                   <span class="icon-bar"></span>
               </button>
-              <router-link class="navbar-brand" to="/">Holocron</router-link>
+              <router-link class="navbar-brand" to="/">{{ $store.state.webappName }}</router-link>
           </div>
           <!-- /.navbar-header -->
-          <ul class="nav navbar-nav navbar-right">
-              <li v-if="isLoggedIn">
-                  <a href="#">
-                      Upload
-                  </a>
-              </li>
+          <ul class="nav navbar-top-links navbar-right">
               <li>
-                  <a v-if="!isLoggedIn" v-on:click="clickLogin">
-                      Login
-                  </a>
-                  <a v-if="isLoggedIn" v-on:click="clickLogout">
-                      Logout
-                  </a>
+                  <dropdown ref="dropdown" v-if="Object.keys(this.$store.state.tasks.taskList).length > 0">
+                      <a>
+                          <icon name="download"></icon>
+                      </a>
+                      <template slot="dropdown">
+                          <li v-for="t in this.$store.state.tasks.taskList">
+                            <div>
+                                <p>
+                                    <strong>
+                                        {{ t.name }}
+                                    </strong>
+                                    <span v-if="t.status==='pending'" class="pull-right text-muted">{{t.progress}}% Complete</span>
+                                </p>
+                                <div v-if="t.status==='pending'" class="progress progress-striped active">
+                                    <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" :style="{width: t.progress + '%'}">
+                                        <span class="sr-only">{{t.progress}}% Complete (success)</span>
+                                    </div>
+                                </div>
+                            </div>
+                          </li>
+                      </template>
+                  </dropdown>
               </li>
           </ul>
           <form class="navbar-form" role="search" v-on:submit.prevent="searchDocuments()">
@@ -38,63 +49,25 @@
               </div>
           </form>
         </div>
-        <modal class="login-modal" v-model="isLoginModalOpen" :header="false" :footer="false">
-            <h1 class="text-center title">Login to your account</h1>
-            <div class="alert alert-danger error" v-if="loginStatus === 'fail'">
-                Error in logging in
-            </div>
-            <form role="form" v-on:submit.prevent="loginUser">
-                <div class="form-group">
-                    <input class="form-control" placeholder="username" v-model.lazy="auth.username">
-                </div>
-                <div class="form-group">
-                    <input class="form-control" placeholder="password" type="password" v-model.lazy="auth.password">
-                </div>
-                <div class="text-right">
-                    <button type="submit" class="btn btn-primary">Login</button>
-                </div>
-            </form>
-            <div class="overlay" v-show="loginStatus === 'pending'">
-              <icon name="spinner" pulse></icon>
-            </div>
-        </modal>
     </nav>
 </template>
 <script>
 import 'vue-awesome/icons/search'
 import 'vue-awesome/icons/spinner'
+import 'vue-awesome/icons/download'
 
 import icon from 'vue-awesome/components/Icon.vue'
-import modal from 'uiv/src/components/modal/Modal.vue'
+import dropdown from 'uiv/src/components/dropdown/Dropdown.vue'
 
 export default {
   components: {
     icon,
-    modal
+    dropdown,
   },
   props: ['activePage'],
   data: function () {
     return {
-      searchString: '',
-      isLoginModalOpen: false,
-      auth: {
-        username: '',
-        password: ''
-      }
-    }
-  },
-  computed: {
-    isLoggedIn () {
-      return this.$store.state.isLoggedIn
-    },
-    loginStatus () {
-      let loginStatus = this.$store.state.loginStatus
-
-      if (loginStatus === 'success') {
-        this.isLoginModalOpen = false
-      }
-
-      return loginStatus
+      searchString: ''
     }
   },
   methods: {
@@ -114,15 +87,6 @@ export default {
       } else {
         this.searchString = ''
       }
-    },
-    clickLogin: function () {
-      this.isLoginModalOpen = true
-    },
-    clickLogout: function () {
-      this.$store.dispatch('logout')
-    },
-    loginUser: function () {
-      this.$store.dispatch('login')
     }
   },
   mounted: function () {
@@ -141,17 +105,5 @@ export default {
 
 .navbar-right a{
   cursor: pointer;
-}
-
-.modal-backdrop{
-  display:none;
-}
-
-div.modal.fade.in {
-  background-color: rgba(0, 0, 0, 0.3);
-}
-
-.login-modal .title {
-  margin-bottom: 50px;
 }
 </style>
