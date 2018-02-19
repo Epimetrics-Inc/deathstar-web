@@ -24,7 +24,7 @@
               </div>
               <div v-bind:style="{fontSize: Math.round(15 * zoomLevel) + 'px'}" id="zoom-wrapper">
                   <div class="doc-header" v-bind:style="{fontSize: 20 * zoomLevel + 'px'}">
-                      <img id="doh-logo" src="../static/doh_logo.png" alt="DOH logo" v-bind:style="{fontSize: Math.round(20 * zoomLevel) + 'px'}">
+                      <img id="doh-logo" src="../static/doh_logo.png" alt="DOH logo" v-bind:style="{width: Math.round(100 * zoomLevel) + 'px'}">
                       <div class="header-title">
                           <p>Republic of the Philippines</p>
                           <p>Department of Health</p>
@@ -72,7 +72,6 @@
                   </div>
                   <div class="doc-annex" v-html="annex">
                   </div>
-                  <!-- /.row -->
               </div>
                <!-- /#zoom-wrapper -->
           </div>
@@ -176,7 +175,7 @@ export default {
 <style>
 #doh-logo{
   float:left;
-  height:100px;
+  height:auto;
   width:100px;
 }
 
@@ -282,6 +281,10 @@ export default {
     margin: 1in;
   }
 }
+/* End of media print */
+
+</style>
+
 /* End of media print */
 
 </style>
