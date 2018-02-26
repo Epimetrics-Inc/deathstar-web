@@ -7,7 +7,7 @@ import tasks from './modules/tasks'
 Vue.use(Vuex)
 
 const state = {
-  webappName: "Policy Miner"
+  webappName: "PolicyMiner"
 }
 
 export default new Vuex.Store({
