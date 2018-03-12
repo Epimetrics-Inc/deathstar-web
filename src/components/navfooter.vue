@@ -5,7 +5,7 @@
 
                 <!--First column-->
                 <div class="col-sm-6">
-                     © 2017 Copyright: <a> EpiMetrics </a>
+                     © 2017 Copyright: <a href="http://www.epimetrics.com.ph"> EpiMetrics </a>
                 </div>
                 <!--/.First column-->
 

@@ -2,7 +2,7 @@
   <div id="wrapper" class="about">
     <div class="about-app jumbotron">
           <h1>{{$store.state.webappName}}</h1>
-          <p>{{$store.state.webappName}} is a web-based application that enables the searching, sorting, filtering, viewing, and downloading of Administrative Orders issued by the Philippine Department of Health. Text mining techniques were applied to allow users retrieve intelligent search results, based from pre-specified topics or via customized search.</p>
+          <p>{{$store.state.webappName}} is a web-based application that enables the searching, sorting, filtering, viewing, and downloading of Administrative Orders issued by the Philippine Department of Health.</p>
     </div>
     <div class="container">
       <div class="row">
