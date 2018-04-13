@@ -1,7 +1,8 @@
 <template>
   <div id="wrapper" class="about">
       <div class="landing-content">
-          {{ $store.state.webappName }}
+          <img src="../static/logo.png" class="website-logo">
+
           <form role="search" v-on:submit.prevent="searchDocuments()">
               <div class="input-group col-md-6">
                   <input type="text" class="form-control" placeholder="Search..." v-model.lazy="searchString">
@@ -46,7 +47,11 @@ export default {
 
 .landing-content .input-group {
   margin: auto;
-  padding:20px;
+  padding: 20px;
+}
+
+.landing-content .website-logo {
+  height: 150px;
 }
 
 </style>
