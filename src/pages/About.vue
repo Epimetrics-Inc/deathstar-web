@@ -1,14 +1,15 @@
 <template>
   <div id="wrapper" class="about">
     <div class="about-app jumbotron">
-          <h1>{{$store.state.webappName}}</h1>
+          <img src="../static/logo.png" class="website-logo">
+
           <p>{{$store.state.webappName}} is a web-based application that enables the searching, sorting, filtering, viewing, and downloading of Administrative Orders issued by the Philippine Department of Health.</p>
     </div>
     <div class="container">
       <div class="row">
         <div class="col-md-7">
           <h1>Who are we?</h1>
-          <p>EpiMetrics, Inc. is a health research institution geared towards the achievement of health equity through rigorous and creative conception, execution, translation, and communication of health systems and policy research</p>
+          <p>EpiMetrics, Inc. is a health research institution geared towards the achievement of health equity through rigorous and creative conception, execution, translation, and communication of health systems and  research</p>
           <img src="../static/epimetrics_logo.png" alt="EpiMetrics logo" class="epimetrics-logo">
           <br>
           <br>
@@ -38,5 +39,9 @@
 
 .about .doh-logo{
   width:30%
+}
+
+.about .website-logo {
+  height: 150px;
 }
 </style>
