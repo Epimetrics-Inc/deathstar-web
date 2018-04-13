@@ -9,7 +9,7 @@
                   <span class="icon-bar"></span>
                   <span class="icon-bar"></span>
               </button>
-              <router-link class="navbar-brand" to="/">{{ $store.state.webappName }}</router-link>
+              <router-link class="navbar-brand" to="/"><img src="../static/logo.png" class="website-logo"></router-link>
           </div>
           <!-- /.navbar-header -->
           <ul class="nav navbar-top-links navbar-right">
@@ -105,5 +105,14 @@ export default {
 
 .navbar-right a{
   cursor: pointer;
+}
+
+.navbar-header .navbar-brand {
+  padding: 0px;
+}
+
+.navbar-header .website-logo {
+  height: 50px;
+  padding: 5px;
 }
 </style>
