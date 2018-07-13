@@ -26,17 +26,18 @@
                         <div class="filter-header">
                             Date Range
                         </div>
-                        <div id="filter-date" class="form-inline">
+
+                        <div id="filter-date" class="form-horizontal">
                             <!-- datefrom dropdown + date-picker -->
                             <dropdown class="form-group" id="filter-date-from">
-                                <label for="datefrom">From </label>
-                                <div class="input-group" id="datefrom">
-                                    <input class="form-control" type="text" v-model.lazy="dateFrom">
-                                    <div class="input-group-btn">
+                                <label for="inputFromDate" class="col-md-2 col-sm-1 control-label">From</label>
+                                <div class="input-group col-sm-10">
+                                    <input class="form-control" id="inputFromDate" type="text" v-model.lazy="dateFrom">
+                                    <span class="input-group-btn">
                                         <button class="btn btn-default" type="button" data-role="trigger">
                                             <icon name="calendar"></icon>
                                         </button>
-                                    </div>
+                                    </span>
                                 </div>
                                 <template slot="dropdown">
                                     <li>
@@ -47,9 +48,9 @@
 
                             <!-- dateto dropdown + date-picker -->
                             <dropdown class="form-group" id="filter-date-from">
-                                <label for="dateto">To </label>
-                                <div class="input-group" id="dateTo">
-                                    <input class="form-control" type="text" v-model.lazy="dateTo">
+                                <label for="inputToDate" class="col-md-2 col-sm-1 control-label">To</label>
+                                <div class="input-group col-sm-10">
+                                    <input class="form-control" id="inputToDate" type="text" v-model.lazy="dateTo">
                                     <div class="input-group-btn">
                                         <button class="btn btn-default" type="button" data-role="trigger">
                                             <icon name="calendar"></icon>
@@ -68,7 +69,7 @@
                             Administration
                         </div>
                         <div id="filter-signed">
-                            <v-select v-model="signedBy" :options="this.$store.state.signList"></v-select>
+                            <v-select v-model="signedBy" :options="this.$store.state.sign.signList"></v-select>
                         </div>
                         <hr>   
                         <button type="button" class="btn btn-default" v-on:click="updateFilters()">Update Results</button>
@@ -82,6 +83,17 @@
                   <div class="alert alert-danger error" v-if="errorMessage">
                       {{ errorMessage }}
                   </div>
+                  <alert type="warning" v-if="showBrowserWarning" dismissible @dismissed="showBrowserWarning = false">
+                      This browser doesn't support bulk document download. Please use 
+                      <a href="https://www.google.com/chrome/browser/desktop/index.html" target="_blank">
+                        Chrome version 52+
+                      </a>
+                      or 
+                      <a href="http://www.opera.com/download" target="_blank">
+                        Opera version 39+
+                      </a>
+                      , or view and download the documents individually.
+                  </alert>  
                   <div class="search-wrapper" v-if="errorMessage === false">
                     <div id = "export-options">
                         <button class="btn btn-default selector-button" id="selectAll" type="button" v-on:click="selectAllDocs()">
@@ -90,7 +102,7 @@
                         <button class="btn btn-default selector-button" id="deselectall" type="button" v-on:click="deselectAllDocs()">
                             Deselect all
                         </button>
-                        <button class="btn btn-default selector-button"  :disabled="checkedDocs.length === 0" href="#" type="button">
+                        <button class="btn btn-default selector-button"  :disabled="checkedDocs.length === 0" v-on:click="downloadSelected()" type="button">
                             Download selected
                         </button>
                     </div>
@@ -146,8 +158,11 @@ import icon from 'vue-awesome/components/Icon.vue'
 import collapse from 'uiv/src/components/collapse/Collapse.vue'
 import dropdown from 'uiv/src/components/dropdown/Dropdown.vue'
 import pagination from 'uiv/src/components/pagination/Pagination.vue'
+import alert from 'uiv/src/components/alert/Alert.vue'
 
 import vSelect from 'vue-select'
+
+import StreamSaver from 'streamsaver'
 
 import datePicker from '@/components/datepicker/DatePicker.vue'
 
@@ -160,6 +175,7 @@ export default {
     collapse,
     dropdown,
     pagination,
+    alert,
     vSelect
   },
   props: ['sidebarCollapse'],
@@ -178,7 +194,8 @@ export default {
       numDocPerPage: 10, // number of document per page
       isOldRouteQuery: false,
       isLoading: false, // is loading document list
-      errorMessage: false // contains string if there is error, else false
+      errorMessage: false, // contains string if there is error, else false
+      showBrowserWarning: false
     }
   },
   methods: {
@@ -191,7 +208,6 @@ export default {
       var year
       var month
       var day
-
       if (isNaN(date)) {
         this[dateObjectName] = ''
       } else {
@@ -207,6 +223,7 @@ export default {
         }
 
         this[dateObjectName] = [year, month, day].join('-')
+
         if (this.dateTo && this.dateFrom > this.dateTo) { // handle overlap
           this[dateObjectName] = ''
         }
@@ -361,6 +378,18 @@ export default {
     deselectAllDocs: function (event) {
       this.checkedDocs = []
     },
+    /**
+    * Download all selected files
+    * Currently available for Chrome 52+ and Opera39+
+    */
+    downloadSelected: function (event) {
+      if (StreamSaver.supported) {
+        this.$store.dispatch('startDownload', this.checkedDocs)
+      } else {
+        this.showBrowserWarning = true
+      }
+    },
+
     clickDocument: function (doc) {
       this.$router.push({ name: 'document', params: { id: doc } })
     }
@@ -397,6 +426,106 @@ export default {
 
 .sidebar .navbar-collapse > *{
   margin-top:15px;
+  margin-left:15px;
+  margin-right:0px;
+  margin-bottom:15px;
+}
+
+.filter-header {
+  font-weight: 500;
+  font-size: 15px;
+  padding: 1px 5px;
+  border-left: solid;
+  margin: 10px 0px;
+}
+
+#filter-menu {
+  color: #565656;
+}
+#filter-menu .checkbox, #filter-menu .radio{
+  margin: 10px 30px;
+  font-weight: normal;
+}
+
+#filter-date .form-group {
+  margin: 10px;
+  margin-bottom: 15px;
+  width:auto;
+  display: block;
+} 
+
+#filter-date label {
+  padding-left:0;
+  text-align: left;
+  font-weight: normal;  
+}
+
+#filter-date .input-group {
+  font-weight: normal;  
+  width: auto;
+}
+
+#filter-signed {
+  margin: 10px;
+  width:auto;
+}
+
+.pagination {
+  display: table;
+  margin: 15px auto;
+}
+
+.hidden-button {
+  visibility: hidden;
+}
+
+.document-list .ao-details {
+  width: 100%;
+}
+
+.document-list .ao-link {
+  cursor: pointer;
+  padding: 10px 15px
+}
+
+.document-list .ao-link:hover{
+  background-color: #eee;
+}
+
+.document-list .ao-link:hover .hidden-button {
+  visibility: visible;
+}
+
+
+.document-list li > div {
+  display: flex;
+}
+
+.document-list li > div > .list-checkbox {
+  margin-top: -2px;
+  margin-right: 10px;
+}
+
+#export-options {
+  margin-bottom: 15px;
+}
+
+#filter-signed ul.dropdown-menu {
+  text-overflow: ellipsis;
+
+  /* Required for text-overflow to do anything */
+  white-space: nowrap;
+  overflow-x: hidden;
+}
+
+#filter-signed ul.dropdown-menu *{
+  text-overflow: ellipsis;
+  /* Required for text-overflow to do anything */
+  white-space: nowrap;
+  overflow-x: hidden;
+}
+</style>
+ margin-top:15px;
   margin-left:15px;
   margin-right:0px;
   margin-bottom:15px;

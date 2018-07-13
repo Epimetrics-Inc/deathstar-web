@@ -3,31 +3,33 @@
     <thead>
     <tr>
       <td>
-        <button type="button" class="btn btn-default btn-sm btn-block" style="border: none" @click="goPrevYear">
+        <btn block size="sm" style="border: none" @click="goPrevYear">
           <icon name="chevron-left"></icon>
-        </button>
+        </btn>
       </td>
       <td colspan="3">
-        <button type="button" class="btn btn-default btn-sm btn-block" style="border: none">
+        <btn block size="sm" style="border: none">
           <b>{{yearStr}}</b>
-        </button>
+        </btn>
       </td>
       <td>
-        <button type="button" class="btn btn-default btn-sm btn-block" style="border: none" @click="goNextYear">
+        <btn block size="sm" style="border: none" @click="goNextYear">
           <icon name="chevron-right"></icon>
-        </button>
+        </btn>
       </td>
     </tr>
     </thead>
     <tbody>
     <tr v-for="row in rows">
       <td v-for="year in row" width="20%">
-        <button type="button"
-                class="btn btn-default btn-sm btn-block" style="border: none"
-                :class="getBtnClass(year)"
-                @click="changeView(year)">
+        <btn
+          block
+          size="sm"
+          style="border: none"
+          :type="getBtnClass(year)"
+          @click="changeView(year)">
           <span>{{year}}</span>
-        </button>
+        </btn>
       </td>
     </tr>
     </tbody>
@@ -35,50 +37,57 @@
 </template>
 
 <script>
-import 'vue-awesome/icons/chevron-left'
-import 'vue-awesome/icons/chevron-right'
-import icon from 'vue-awesome/components/Icon'
+  import 'vue-awesome/icons/chevron-left'
+  import 'vue-awesome/icons/chevron-right'
+  import icon from 'vue-awesome/components/Icon'
 
-export default {
-  props: ['year'],
-  components: {
-    icon
-  },
-  computed: {
-    rows () {
-      let rows = []
-      let yearGroupStart = this.year - this.year % 20
-      for (let i = 0; i < 4; i++) {
-        rows.push([])
-        for (let j = 0; j < 5; j++) {
-          rows[i].push(yearGroupStart + i * 5 + j)
+  import Btn from '@/../node_modules/uiv/src/components/button/Btn'
+
+  export default {
+    components: {
+      Btn,
+      icon
+    },
+    props: {
+      year: Number,
+      iconControlLeft: String,
+      iconControlRight: String
+    },
+    computed: {
+      rows () {
+        let rows = []
+        let yearGroupStart = this.year - this.year % 20
+        for (let i = 0; i < 4; i++) {
+          rows.push([])
+          for (let j = 0; j < 5; j++) {
+            rows[i].push(yearGroupStart + i * 5 + j)
+          }
         }
-      }
-      return rows
-    },
-    yearStr () {
-      let start = this.year - this.year % 20
-      return `${start} ~ ${start + 19}`
-    }
-  },
-  methods: {
-    getBtnClass (year) {
-      if (year === this.year) {
-        return {'btn-primary': true}
-      } else {
-        return {'btn-default': true}
+        return rows
+      },
+      yearStr () {
+        let start = this.year - this.year % 20
+        return `${start} ~ ${start + 19}`
       }
     },
-    goPrevYear () {
-      this.$emit('year-change', this.year - 20)
-    },
-    goNextYear () {
-      this.$emit('year-change', this.year + 20)
-    },
-    changeView (year) {
-      this.$emit('year-change', year)
-      this.$emit('view-change', 'm')
+    methods: {
+      getBtnClass (year) {
+        if (year === this.year) {
+          return 'primary'
+        } else {
+          return 'default'
+        }
+      },
+      goPrevYear () {
+        this.$emit('year-change', this.year - 20)
+      },
+      goNextYear () {
+        this.$emit('year-change', this.year + 20)
+      },
+      changeView (year) {
+        this.$emit('year-change', year)
+        this.$emit('view-change', 'm')
+      }
     }
   }
-}
 </script>

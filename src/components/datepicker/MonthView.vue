@@ -3,30 +3,33 @@
     <thead>
     <tr>
       <td>
-        <button type="button" class="btn btn-default btn-sm btn-block" style="border: none" @click="goPrevYear">
+        <btn block size="sm" style="border: none" @click="goPrevYear">
           <icon name="chevron-left"></icon>
-        </button>
+        </btn>
       </td>
       <td colspan="4">
-        <button type="button" class="btn btn-default btn-sm btn-block" style="border: none" @click="changeView()">
+        <btn block size="sm" style="border: none" @click="changeView()">
           <b>{{year}}</b>
-        </button>
+        </btn>
       </td>
       <td>
-        <button type="button" class="btn btn-default btn-sm btn-block" style="border: none" @click="goNextYear">
+        <btn block size="sm" style="border: none" @click="goNextYear">
           <icon name="chevron-right"></icon>
-        </button>
+        </btn>
       </td>
     </tr>
     </thead>
     <tbody>
-    <tr v-for="(row,i) in rows">
-      <td colspan="2" v-for="(month,j) in row" width="33.333333%">
-        <button type="button" class="btn btn-sm btn-block" style="border: none"
-                :class="getBtnClass(i*3+j)"
-                @click="changeView(i*3+j)">
-          <span>{{ tCell(month) }}</span>
-        </button>
+    <tr v-for="(row, i) in rows">
+      <td colspan="2" v-for="(month, j) in row" width="33.333333%">
+        <btn
+          block
+          size="sm"
+          style="border: none"
+          :type="getBtnClass(i*3+j)"
+          @click="changeView(i*3+j)">
+          <span>{{tCell(month)}}</span>
+        </btn>
       </td>
     </tr>
     </tbody>
@@ -34,56 +37,64 @@
 </template>
 
 <script>
-import 'vue-awesome/icons/chevron-left'
-import 'vue-awesome/icons/chevron-right'
-import icon from 'vue-awesome/components/Icon'
+  import 'vue-awesome/icons/chevron-left'
+  import 'vue-awesome/icons/chevron-right'
+  import icon from 'vue-awesome/components/Icon'
 
-import Locale from '@/../node_modules/uiv/src/mixins/locale'
+  import Locale from '@/../node_modules/uiv/src/mixins/localeMixin'
+  import Btn from '@/../node_modules/uiv/src/components/button/Btn'
+  import {isExist} from '@/../node_modules/uiv/src/utils/objectUtils'
 
-export default {
-  mixins: [Locale],
-  props: ['month', 'year'],
-  components: {
-    icon
-  },
-  data () {
-    return {
-      rows: []
-    }
-  },
-  mounted () {
-    for (let i = 0; i < 4; i++) {
-      this.rows.push([])
-      for (let j = 0; j < 3; j++) {
-        this.rows[i].push(i * 3 + j + 1)
-      }
-    }
-  },
-  methods: {
-    tCell (cell) {
-      return this.t(`uiv.datePicker.month${cell}`)
+  export default {
+    components: {
+      Btn,
+      icon
     },
-    getBtnClass (month) {
-      if (month === this.month) {
-        return {'btn-primary': true}
-      } else {
-        return {'btn-default': true}
+    mixins: [Locale],
+    props: {
+      month: Number,
+      year: Number,
+      iconControlLeft: String,
+      iconControlRight: String
+    },
+    data () {
+      return {
+        rows: []
       }
     },
-    goPrevYear () {
-      this.$emit('year-change', this.year - 1)
+    mounted () {
+      for (let i = 0; i < 4; i++) {
+        this.rows.push([])
+        for (let j = 0; j < 3; j++) {
+          this.rows[i].push(i * 3 + j + 1)
+        }
+      }
     },
-    goNextYear () {
-      this.$emit('year-change', this.year + 1)
-    },
-    changeView (monthIndex) {
-      if (typeof monthIndex === 'undefined') {
-        this.$emit('view-change', 'y')
-      } else {
-        this.$emit('month-change', monthIndex)
-        this.$emit('view-change', 'd')
+    methods: {
+      tCell (cell) {
+        return this.t(`uiv.datePicker.month${cell}`)
+      },
+      getBtnClass (month) {
+        if (month === this.month) {
+          return 'primary'
+        } else {
+          return 'default'
+        }
+      },
+      goPrevYear () {
+        this.$emit('year-change', this.year - 1)
+      },
+      goNextYear () {
+        this.$emit('year-change', this.year + 1)
+      },
+      changeView (monthIndex) {
+        if (isExist(monthIndex)) {
+          this.$emit('month-change', monthIndex)
+          this.$emit('view-change', 'd')
+        } else {
+          this.$emit('view-change', 'y')
+        }
       }
     }
   }
-}
 </script>

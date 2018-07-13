@@ -1,7 +1,7 @@
 <template>
   <div id="wrapper" class="about">
       <div class="landing-content">
-          Holocron
+          <img src="../static/logo.png" class="website-logo">
 
           <form role="search" v-on:submit.prevent="searchDocuments()">
               <div class="input-group col-md-6">
@@ -40,13 +40,18 @@ export default {
 <style>
 .landing-content {
   text-align: center;
-  font-size: 8em;
+  font-size: 5em;
   margin-top: 100px;
   color: #777;
 }
 
 .landing-content .input-group {
   margin: auto;
+  padding: 20px;
+}
+
+.landing-content .website-logo {
+  height: 150px;
 }
 
 </style>
