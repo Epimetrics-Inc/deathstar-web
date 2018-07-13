@@ -25,6 +25,9 @@ export default {
   },
   mounted: function () {
     this.$store.dispatch('initSignList')
+  },
+  beforeCreate: function () {
+  	document.title = this.$store.state.webappName
   }
 }
 </script>

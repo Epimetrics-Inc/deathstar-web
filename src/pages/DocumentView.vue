@@ -3,6 +3,10 @@
         <div class="alert alert-danger error" v-if="errorMessage">
             {{ errorMessage }}
         </div>
+        
+        <div class="hidden" id="doctitle">
+          doc.title
+        </div>
 
         <!-- Page Content -->
         <div id="page-wrapper">
@@ -14,13 +18,13 @@
                   <a id="zoom-in-button" v-on:click="zoomIn()">
                       <icon name="search-plus"></icon>
                   </a>
-                  <a id="download-button" v-on:click="download()">
+                  <a id="download-button" :href="download()" download>
                       <icon name="download"></icon>
                   </a>
               </div>
               <div v-bind:style="{fontSize: Math.round(15 * zoomLevel) + 'px'}" id="zoom-wrapper">
                   <div class="doc-header" v-bind:style="{fontSize: 20 * zoomLevel + 'px'}">
-                      <img id="doh-logo" src="../static/doh_logo.png" alt="DOH logo" v-bind:style="{fontSize: Math.round(20 * zoomLevel) + 'px'}">
+                      <img id="doh-logo" src="../static/doh_logo.png" alt="DOH logo" v-bind:style="{width: Math.round(100 * zoomLevel) + 'px'}">
                       <div class="header-title">
                           <p>Republic of the Philippines</p>
                           <p>Department of Health</p>
@@ -68,7 +72,6 @@
                   </div>
                   <div class="doc-annex" v-html="annex">
                   </div>
-                  <!-- /.row -->
               </div>
                <!-- /#zoom-wrapper -->
           </div>
@@ -87,8 +90,7 @@ import 'vue-awesome/icons/download'
 import collapse from 'uiv/src/components/collapse/Collapse.vue'
 import icon from 'vue-awesome/components/Icon'
 
-import { getDocument } from '@/api/api'
-import { getImageResource } from '@/api/gitresource'
+import { getDocument, getPdf, getImageResource } from '@/api/api'
 
 export default {
   components: {
@@ -126,7 +128,7 @@ export default {
       }
     },
     download: function () {
-      alert('download')
+      return getPdf(this.doc.id)
     },
     fetchDocument: function () {
       let document = this.$route.params.id
@@ -173,7 +175,7 @@ export default {
 <style>
 #doh-logo{
   float:left;
-  height:100px;
+  height:auto;
   width:100px;
 }
 
@@ -255,5 +257,34 @@ export default {
 .preview-buttons a#download-button {
   margin-left:20px;
 }
+
+/* Start of media print */
+@media print {
+  .preview-buttons{
+   display:none;
+  }
+
+  body {
+    margin: 0;
+    min-height:100%;
+  }
+
+  #page-wrapper {
+    padding: 0px;
+  }
+
+  #page-wrapper .doc-preview {
+    padding: 0px;
+  }
+
+  @page {
+    margin: 1in;
+  }
+}
+/* End of media print */
+
+</style>
+
+/* End of media print */
 
 </style>
