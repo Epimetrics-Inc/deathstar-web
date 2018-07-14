@@ -6,7 +6,7 @@ import axios from '@/plugins/axios.js'
 export function getDocuments (searchString, docquery) {
   if (searchString) {
     searchString = searchString.replace(' ', '%26')
-    return axios.get('document?select=id,title,date,subject,sign,doctype,docnum,created,label(*),modified&limit=10&or=(title.eq.' +
+    return axios.get('document?select=id,title,date,subject,sign,doctype,docnum,created,modified&limit=10&or=(title.eq.' +
       searchString + ',docnum.fts.{' + searchString + '},body.fts.{' + searchString + '})&' + docquery,
       {
         headers: {
@@ -14,7 +14,7 @@ export function getDocuments (searchString, docquery) {
         }
       })
   } else {
-    return axios.get('document?select=id,title,date,subject,sign,doctype,docnum,created,label(*),modified&limit=10&' + docquery, {
+    return axios.get('document?select=id,title,date,subject,sign,doctype,docnum,created,modified&limit=10&' + docquery, {
       headers: {
         'Prefer': 'count=exact'
       }
