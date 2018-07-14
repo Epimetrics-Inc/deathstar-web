@@ -3,5 +3,5 @@ var devEnv = require('./dev.env')
 
 module.exports = merge(devEnv, {
   NODE_ENV: '"testing"',
-  SERVER_URL: '"https://siklab.io/"'
+  SERVER_URL: '"https://policyminer-api.epimetrics.com.ph/"'
 })
