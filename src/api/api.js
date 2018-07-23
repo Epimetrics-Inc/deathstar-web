@@ -5,7 +5,7 @@ import axios from '@/plugins/axios.js'
 */
 export function getDocuments (searchString, docquery) {
   if (searchString) {
-    searchString = searchString.replace(' ', '%26')
+    searchString = searchString.split(' ').join('%26')
     return axios.get('document?select=id,title,date,subject,sign,doctype,docnum,created,modified&limit=10&or=(title.eq.' +
       searchString + ',docnum.fts.{' + searchString + '},body.fts.{' + searchString + '})&' + docquery,
       {
