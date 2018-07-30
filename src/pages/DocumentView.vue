@@ -18,9 +18,6 @@
                   <a id="zoom-in-button" v-on:click="zoomIn()">
                       <icon name="search-plus"></icon>
                   </a>
-                  <a id="download-button" :href="download()" download>
-                      <icon name="download"></icon>
-                  </a>
               </div>
               <div v-bind:style="{fontSize: Math.round(15 * zoomLevel) + 'px'}" id="zoom-wrapper">
                   <div class="doc-header" v-bind:style="{fontSize: 20 * zoomLevel + 'px'}">
