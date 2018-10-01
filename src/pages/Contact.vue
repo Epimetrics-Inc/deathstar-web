@@ -1,14 +1,16 @@
 <template>
-      <div>
-        <h3>Comments or Suggestions?</h3>
-        <form name="contact" method="POST" netlify>
-            <label for="Name">Your Name:</label>
-            <input type="text" name="name" />
-            <label for="email">Your E-Mail:</label>
-            <input type="email" name="email"/>
-            <label for="message">Your Message:</label>
-            <input type="text" name="message" />
-          <button type="submit">Submit</button>
-        </form>
-      </div>
+    <form name="contact" method="POST" netlify>
+    <p>
+        <label>Your Name: <input type="text" name="name" /></label>   
+    </p>
+    <p>
+        <label>Your Email: <input type="email" name="email" /></label>
+    </p>
+    <p>
+        <label>Message: <textarea name="message"></textarea></label>
+    </p>
+    <p>
+        <button type="submit">Send</button>
+    </p>
+    </form>
 </template>
