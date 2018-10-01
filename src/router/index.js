@@ -6,6 +6,7 @@ import DocumentView from '@/pages/DocumentView'
 import About from '@/pages/About'
 import Visualization from '@/pages/Visualization'
 import ErrorPage from '@/pages/ErrorPage'
+import Contact from '@/pages/Contact'
 
 Vue.use(Router)
 
@@ -36,6 +37,11 @@ export default new Router({
       path: '/visualization',
       name: 'visualization',
       component: Visualization
+    },
+    {
+      path: '/contact',
+      name: 'contact',
+      component: Contact
     },
     {
       path: '*',

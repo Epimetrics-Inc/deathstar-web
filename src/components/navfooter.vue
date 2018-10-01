@@ -14,6 +14,7 @@
                     <div class="footer-links pull-right">
                       <router-link :to="{ name: 'visualization' }">How to generate visualization</router-link>
                       <router-link :to="{ name: 'about' }">About</router-link>
+                      <router-link :to="{ name: 'contact' }">Contact Us</router-link>
                     </div>
                 </div>
                 <!--/.Second column-->
