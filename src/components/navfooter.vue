@@ -4,13 +4,21 @@
             <div class="row">
 
                 <!--First column-->
-                <div class="col-sm-6">
+                <div class="col-sm-4">
                      © 2017 Copyright: <a href="http://www.epimetrics.com.ph"> EpiMetrics </a>
                 </div>
                 <!--/.First column-->
+                
+                <div class="col-sm-4 align-items-center">
+                    <div>
+                        In Partnership with 
+                        the <b>Philippine Department of Health</b>
+                    </div>
+                </div>
+
 
                 <!--Second column-->
-                <div class="col-sm-6 pull-right">
+                <div class="col-sm-4 pull-right">
                     <div class="footer-links pull-right">
                       <router-link :to="{ name: 'visualization' }">How to generate visualization</router-link>
                       <router-link :to="{ name: 'about' }">About</router-link>
@@ -30,7 +38,7 @@
   padding: 30px 20px;
 }
 
-.footer-links > a{
-  padding: 0 20px
+.footer-links > a {
+  padding: 0 20px;
 }
 </style>
