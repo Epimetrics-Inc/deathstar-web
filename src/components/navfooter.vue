@@ -4,7 +4,7 @@
             <div class="row">
 
                 <!--First column-->
-                <div class="col-sm-4">
+                <div class="col-sm-3">
                      © 2017 Copyright: <a href="http://www.epimetrics.com.ph"> EpiMetrics </a>
                 </div>
                 <!--/.First column-->
@@ -18,10 +18,11 @@
 
 
                 <!--Second column-->
-                <div class="col-sm-4 pull-right">
+                <div class="col-sm-5 pull-right">
                     <div class="footer-links pull-right">
                       <router-link :to="{ name: 'visualization' }">How to generate visualization</router-link>
                       <router-link :to="{ name: 'about' }">About</router-link>
+                      <a href="https://www.epimetrics.com.ph/#contact-us">Report Errors</a>
                     </div>
                 </div>
                 <!--/.Second column-->
